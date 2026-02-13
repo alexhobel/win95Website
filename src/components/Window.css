@@ -1,0 +1,208 @@
+.window {
+  position: absolute;
+  min-width: 400px;
+  min-height: 300px;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  resize: none;
+  border: 2px outset #c0c0c0;
+  background: #c0c0c0;
+}
+
+.window.pdf-window {
+  max-width: none;
+  min-width: 600px;
+  min-height: 400px;
+}
+
+.window.maximized {
+  max-width: none;
+  max-height: none;
+  border: none;
+}
+
+.window.minimized {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
+}
+
+.window:not(.minimized) {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease-in, visibility 0.25s ease-in;
+}
+
+.window.selected {
+  outline: 2px solid #0000ff;
+  outline-offset: -2px;
+  box-shadow: 0 0 8px rgba(0, 0, 255, 0.6);
+  animation: selection-pulse 0.2s ease-out;
+}
+
+@keyframes selection-pulse {
+  0% {
+    box-shadow: 0 0 4px rgba(0, 0, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(0, 0, 255, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(0, 0, 255, 0.6);
+  }
+}
+
+/* XP.css already styles .window-body, we just add our custom content styles */
+
+.window-content {
+  padding: 10px;
+  color: #000;
+  font-size: 11px;
+  line-height: 1.4;
+  background: #c0c0c0;
+}
+
+.window-content h2 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #000080;
+}
+
+.window-content p {
+  margin-bottom: 15px;
+}
+
+.features-list {
+  margin: 15px 0;
+}
+
+.features-list h3 {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #000080;
+}
+
+.features-list ul {
+  list-style: none;
+  padding-left: 20px;
+}
+
+.features-list li {
+  margin-bottom: 5px;
+  position: relative;
+}
+
+.features-list li:before {
+  content: "•";
+  position: absolute;
+  left: -15px;
+  color: #000080;
+  font-weight: bold;
+}
+
+.window-footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.window-button {
+  padding: 4px 12px;
+  font-size: 11px;
+  border: 2px outset #c0c0c0;
+  background: #c0c0c0;
+  color: #000;
+}
+
+.window-button:hover {
+  background: #d4d0c8;
+}
+
+.window-button:active {
+  border: 2px inset #c0c0c0;
+  background: #808080;
+}
+
+.pdf-window-body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+}
+
+.browser-window-body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+}
+
+.window.browser-window {
+  max-width: none;
+  min-width: 800px;
+  min-height: 600px;
+}
+
+.window.folder-window {
+  max-width: none;
+  min-width: 500px;
+  min-height: 400px;
+}
+
+.folder-window-body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+}
+
+.window.music-maker-window {
+  max-width: none;
+  min-width: 700px;
+  min-height: 500px;
+}
+
+.music-maker-window-body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+}
+
+.window.mixer-window {
+  max-width: 300px;
+  min-width: 300px;
+  min-height: 350px;
+  max-height: 350px;
+}
+
+.mixer-window-body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+}
+

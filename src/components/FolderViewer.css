@@ -1,0 +1,120 @@
+/* Folder Viewer Container */
+.folder-viewer-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+  background: #c0c0c0;
+}
+
+/* Folder Toolbar */
+.folder-toolbar {
+  background: #c0c0c0;
+  border-bottom: 1px solid #808080;
+  padding: 2px 4px;
+  flex-shrink: 0;
+}
+
+.folder-address-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+}
+
+.folder-label {
+  font-size: 11px;
+  color: #000;
+  white-space: nowrap;
+}
+
+.folder-path {
+  flex: 1;
+  height: 18px;
+  border: 1px inset #c0c0c0;
+  background: white;
+  padding: 0 4px;
+  font-size: 11px;
+  font-family: 'MS Sans Serif', sans-serif;
+  color: #000;
+  display: flex;
+  align-items: center;
+}
+
+/* Folder Content */
+.folder-content {
+  flex: 1;
+  background: white;
+  overflow: auto;
+  padding: 4px;
+  min-height: 0;
+}
+
+.folder-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+}
+
+.folder-item {
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.folder-item:hover {
+  background-color: rgba(0, 0, 128, 0.1);
+}
+
+.folder-item.selected {
+  background-color: rgba(0, 0, 128, 0.2);
+  border: 1px dotted #000080;
+}
+
+.folder-item-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.folder-item-label {
+  font-size: 11px;
+  color: #000;
+  text-align: center;
+  word-wrap: break-word;
+  max-width: 80px;
+  line-height: 1.2;
+}
+
+.folder-item.selected .folder-item-label {
+  background-color: #000080;
+  color: white;
+  padding: 1px 2px;
+  border: 1px dotted white;
+}
+
+/* Folder Status Bar */
+.folder-status-bar {
+  background: #c0c0c0;
+  border-top: 1px solid #808080;
+  padding: 2px 4px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  color: #000;
+  flex-shrink: 0;
+}
+

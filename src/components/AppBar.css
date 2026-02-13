@@ -1,0 +1,64 @@
+/* AppBar window button styles matching Windows 95 taskbar */
+.appbar-windows {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Focused/active window tab - pressed/inset appearance (Windows 95 typical) */
+.appbar-window-button.focused {
+  background: #c0c0c0 !important;
+  border: 2px inset #c0c0c0 !important;
+  box-shadow: none !important;
+}
+
+.appbar-window-button.focused:hover {
+  background: #c0c0c0 !important;
+}
+
+/* Inactive window tabs - raised/outset appearance (normal button look) */
+.appbar-window-button.inactive {
+  background: #c0c0c0 !important;
+  border: 2px outset #c0c0c0 !important;
+  box-shadow: none !important;
+}
+
+.appbar-window-button.inactive:hover {
+  background: #d4d0c8 !important;
+}
+
+.appbar-window-button.inactive:active {
+  border: 2px inset #c0c0c0 !important;
+  background: #808080 !important;
+}
+
+/* Minimized window tabs - raised/outset with italic text */
+.appbar-window-button.minimized {
+  background: #c0c0c0 !important;
+  border: 2px outset #c0c0c0 !important;
+  font-style: italic;
+  box-shadow: none !important;
+}
+
+.appbar-window-button.minimized:hover {
+  background: #d4d0c8 !important;
+}
+
+.appbar-window-button.minimized:active {
+  border: 2px inset #c0c0c0 !important;
+  background: #808080 !important;
+}
+
+/* Time display - recessed/flat appearance */
+.appbar-time {
+  background: #c0c0c0 !important;
+  border: 2px inset #c0c0c0 !important;
+}
+
+/* Start Menu - grey background matching AppBar */
+.start-menu {
+  background: #c0c0c0 !important;
+}
+
+

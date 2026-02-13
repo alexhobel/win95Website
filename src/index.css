@@ -1,0 +1,89 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'MS Sans Serif', sans-serif;
+  font-size: 11px;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Windows 95 Window Styles */
+.window {
+  border: 2px outset #c0c0c0;
+  background: #c0c0c0;
+}
+
+.title-bar {
+  background: linear-gradient(to right, #000080 0%, #1084d0 100%);
+  color: white;
+  padding: 2px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  user-select: none;
+}
+
+.browser-title-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.browser-title-icon {
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.title-bar-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title-bar-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.title-bar-controls button {
+  width: 16px;
+  height: 14px;
+  border: 1px outset #c0c0c0;
+  background: #c0c0c0;
+  font-size: 9px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.title-bar-controls button:hover {
+  background: #d4d0c8;
+}
+
+.title-bar-controls button:active {
+  border: 1px inset #c0c0c0;
+  background: #808080;
+}
+
+.window-body {
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+  padding: 2px;
+}
