@@ -5,7 +5,7 @@ import './VinylCollection.css';
 // Use Vercel API route in production, localhost proxy in development
 const PROXY_URL = import.meta.env.PROD 
   ? '/api/discogs' 
-  : 'http://localhost:3001';
+  : 'http://localhost:3001/api/discogs';
 const DISCOGS_USERNAME = 'Alex_Hobel';
 
 const VinylCollection = () => {
@@ -50,7 +50,7 @@ const VinylCollection = () => {
 
       // Use backend proxy to avoid CORS issues
       const folderId = 0; // Default collection folder
-      const url = `${PROXY_URL}/api/discogs/collection?page=${page}&folderId=${folderId}`;
+      const url = `${PROXY_URL}/collection?page=${page}&folderId=${folderId}`;
 
       const response = await fetch(url, {
         headers: {

@@ -2,6 +2,7 @@
 // Sends email using Resend API (https://resend.com)
 // Set RESEND_API_KEY environment variable in Vercel
 
+/* global process */
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);

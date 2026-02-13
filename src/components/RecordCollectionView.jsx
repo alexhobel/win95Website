@@ -5,7 +5,7 @@ import './RecordCollectionView.css';
 // Use Vercel API route in production, localhost proxy in development
 const PROXY_URL = import.meta.env.PROD 
   ? '/api/discogs' 
-  : 'http://localhost:3001';
+  : 'http://localhost:3001/api/discogs';
 const DISCOGS_USERNAME = 'Alex_Hobel';
 
 const RecordCollectionView = ({ onBack }) => {
@@ -29,7 +29,7 @@ const RecordCollectionView = ({ onBack }) => {
         const folderId = 0;
 
         while (hasMore) {
-          const url = `${PROXY_URL}/api/discogs/collection?page=${currentPage}&folderId=${folderId}`;
+          const url = `${PROXY_URL}/collection?page=${currentPage}&folderId=${folderId}`;
           const response = await fetch(url, {
             headers: {
               'Accept': 'application/json',
