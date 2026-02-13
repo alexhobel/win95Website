@@ -6,6 +6,7 @@ import AppBarComponent from './AppBar';
 import cvPdf from '../assets/CV .pdf';
 import browserIcon from '../assets/BrowserIcon.webp';
 import folderIcon from '../assets/FolderIcon.png';
+import mailIcon from '../assets/MailIcon.png';
 import './Desktop.css';
 
 const Desktop = () => {
@@ -72,6 +73,17 @@ const Desktop = () => {
         description: 'Create awesome tunes!',
         isMusicMaker: true
       }
+    },
+    {
+      id: 'contact',
+      title: 'Contact me',
+      icon: mailIcon,
+      iconType: 'image',
+      content: {
+        title: 'Contact me',
+        description: 'Send me a message',
+        isContactForm: true
+      }
     }
   ], []);
 
@@ -108,8 +120,8 @@ const Desktop = () => {
       windowIdCounter.current += 1;
       const initialX = 100 + (openWindows.length * 30);
       const initialY = 100 + (openWindows.length * 30);
-      const windowWidth = service.content.isPDF ? 800 : service.content.isBrowser ? 900 : service.content.isFolder ? 600 : service.content.isMusicMaker ? 800 : 500;
-      const windowHeight = service.content.isPDF ? 600 : service.content.isBrowser ? 700 : service.content.isFolder ? 500 : service.content.isMusicMaker ? 600 : 400;
+      const windowWidth = service.content.isPDF ? 800 : service.content.isBrowser ? 900 : service.content.isFolder ? 600 : service.content.isMusicMaker ? 800 : service.content.isContactForm ? 700 : 500;
+      const windowHeight = service.content.isPDF ? 600 : service.content.isBrowser ? 700 : service.content.isFolder ? 500 : service.content.isMusicMaker ? 600 : service.content.isContactForm ? 600 : 400;
       
       // Set up file open handler for folders
       let folderContent = service.content;

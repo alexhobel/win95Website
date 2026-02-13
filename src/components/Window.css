@@ -273,3 +273,28 @@
   border: 2px inset #c0c0c0;
 }
 
+.window.contact-form-window {
+  max-width: none;
+  min-width: 600px;
+  min-height: 500px;
+}
+
+.contact-form-window-body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+}
+
+@media (max-width: 768px) {
+  .window.contact-form-window {
+    min-width: 100vw;
+    max-width: 100vw;
+    min-height: 400px;
+  }
+}
+

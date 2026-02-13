@@ -1,0 +1,198 @@
+.contact-form-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #c0c0c0;
+  font-family: 'MS Sans Serif', sans-serif;
+}
+
+/* Menu Bar - Microsoft Exchange Style */
+.contact-menu-bar {
+  display: flex;
+  background: #c0c0c0;
+  border-bottom: 1px solid #808080;
+  padding: 2px 0;
+  gap: 0;
+}
+
+.menu-item {
+  padding: 4px 12px;
+  border: none;
+  background: transparent;
+  font-size: 11px;
+  color: #000;
+  cursor: pointer;
+  font-family: 'MS Sans Serif', sans-serif;
+}
+
+.menu-item:hover {
+  background: #316ac5;
+  color: #fff;
+}
+
+/* Toolbar */
+.contact-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #c0c0c0;
+  border-bottom: 2px inset #c0c0c0;
+}
+
+.toolbar-button {
+  width: 24px;
+  height: 24px;
+  border: 1px outset #c0c0c0;
+  background: #c0c0c0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.toolbar-button:hover {
+  background: #d4d0c8;
+}
+
+.toolbar-button:active {
+  border: 1px inset #c0c0c0;
+  background: #808080;
+}
+
+.toolbar-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 20px;
+  background: #808080;
+  margin: 0 4px;
+}
+
+/* Form Content */
+.contact-form-content {
+  flex: 1;
+  padding: 12px;
+  background: #ffffff;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Email Header - Microsoft Exchange Style */
+.email-header {
+  background: #ffffff;
+  border: 1px solid #808080;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.header-label {
+  font-weight: bold;
+  color: #000;
+  min-width: 60px;
+}
+
+.header-value {
+  color: #000;
+  flex: 1;
+}
+
+.subject-input {
+  flex: 1;
+}
+
+/* Message Body */
+.message-body-container {
+  flex: 1;
+  min-height: 200px;
+  border: 1px solid #808080;
+  background: #ffffff;
+}
+
+.message-input {
+  height: 100%;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+}
+
+/* Form Fields Section */
+.form-fields-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px;
+  background: #f0f0f0;
+  border: 1px solid #808080;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Status Message */
+.status-message {
+  padding: 8px 12px;
+  border: 2px solid;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.status-message.success {
+  background: #c0ffc0;
+  border-color: #00aa00;
+  color: #006600;
+}
+
+.status-message.error {
+  background: #ffc0c0;
+  border-color: #aa0000;
+  color: #660000;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 0;
+}
+
+.send-button {
+  min-width: 100px;
+  font-weight: bold;
+}
+
+/* Status Bar */
+.contact-status-bar {
+  height: 22px;
+  background: #c0c0c0;
+  border-top: 2px inset #c0c0c0;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #000;
+  display: flex;
+  align-items: center;
+}
+
