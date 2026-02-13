@@ -296,3 +296,29 @@
   }
 }
 
+.window.seo-checker-window {
+  min-width: 900px;
+  min-height: 700px;
+  max-width: 900px;
+  max-height: 700px;
+}
+
+.seo-checker-window-body {
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  background: #c0c0c0;
+  border: 2px inset #c0c0c0;
+}
+
+@media (max-width: 768px) {
+  .window.seo-checker-window {
+    min-width: 100vw;
+    max-width: 100vw;
+    min-height: 500px;
+  }
+}
+

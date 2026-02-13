@@ -84,6 +84,16 @@ const Desktop = () => {
         description: 'Send me a message',
         isContactForm: true
       }
+    },
+    {
+      id: 'seo-checker',
+      title: 'SEO/GEO Checker',
+      icon: '🔍',
+      content: {
+        title: 'SEO/GEO Checker',
+        description: 'Analyze website SEO',
+        isSEOChecker: true
+      }
     }
   ], []);
 
@@ -120,8 +130,8 @@ const Desktop = () => {
       windowIdCounter.current += 1;
       const initialX = 100 + (openWindows.length * 30);
       const initialY = 100 + (openWindows.length * 30);
-      const windowWidth = service.content.isPDF ? 800 : service.content.isBrowser ? 900 : service.content.isFolder ? 600 : service.content.isMusicMaker ? 800 : service.content.isContactForm ? 700 : 500;
-      const windowHeight = service.content.isPDF ? 600 : service.content.isBrowser ? 700 : service.content.isFolder ? 500 : service.content.isMusicMaker ? 600 : service.content.isContactForm ? 600 : 400;
+      const windowWidth = service.content.isPDF ? 800 : service.content.isBrowser ? 900 : service.content.isFolder ? 600 : service.content.isMusicMaker ? 800 : service.content.isContactForm ? 700 : service.content.isSEOChecker ? 900 : 500;
+      const windowHeight = service.content.isPDF ? 600 : service.content.isBrowser ? 700 : service.content.isFolder ? 500 : service.content.isMusicMaker ? 600 : service.content.isContactForm ? 600 : service.content.isSEOChecker ? 700 : 400;
       
       // Set up file open handler for folders
       let folderContent = service.content;

@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "proxy": "node discogs-proxy.js"
+    "proxy": "node discogs-proxy.js",
+    "seo-dev": "node seo-dev-server.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

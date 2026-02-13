@@ -5,6 +5,7 @@ import FolderViewer from './FolderViewer';
 import MusicMaker from './MusicMaker';
 import MixerWindow from './MixerWindow';
 import ContactForm from './ContactForm';
+import SEOGeoChecker from './SEOGeoChecker';
 import './Window.css';
 
 const Window = ({ window, onClose, onMinimize, onMaximize, onFocus, onMove, isSelected }) => {
@@ -89,7 +90,7 @@ const Window = ({ window, onClose, onMinimize, onMaximize, onFocus, onMove, isSe
   return (
     <div
       ref={windowRef}
-      className={`window ${window.content.isPDF ? 'pdf-window' : ''} ${window.content.isBrowser ? 'browser-window' : ''} ${window.content.isFolder ? 'folder-window' : ''} ${window.content.isMusicMaker ? 'music-maker-window' : ''} ${window.content.isMixer ? 'mixer-window' : ''} ${window.content.isContactForm ? 'contact-form-window' : ''} ${window.maximized ? 'maximized' : ''} ${window.minimized ? 'minimized' : ''} ${isSelected ? 'selected' : ''}`}
+      className={`window ${window.content.isPDF ? 'pdf-window' : ''} ${window.content.isBrowser ? 'browser-window' : ''} ${window.content.isFolder ? 'folder-window' : ''} ${window.content.isMusicMaker ? 'music-maker-window' : ''} ${window.content.isMixer ? 'mixer-window' : ''} ${window.content.isContactForm ? 'contact-form-window' : ''} ${window.content.isSEOChecker ? 'seo-checker-window' : ''} ${window.maximized ? 'maximized' : ''} ${window.minimized ? 'minimized' : ''} ${isSelected ? 'selected' : ''}`}
       style={{
         left: `${window.x}px`,
         top: `${window.y}px`,
@@ -142,7 +143,7 @@ const Window = ({ window, onClose, onMinimize, onMaximize, onFocus, onMove, isSe
           </button>
         </div>
       </div>
-      <div className={`window-body ${window.content.isPDF ? 'pdf-window-body' : ''} ${window.content.isBrowser ? 'browser-window-body' : ''} ${window.content.isFolder ? 'folder-window-body' : ''} ${window.content.isMusicMaker ? 'music-maker-window-body' : ''} ${window.content.isMixer ? 'mixer-window-body' : ''} ${window.content.isContactForm ? 'contact-form-window-body' : ''}`}>
+      <div className={`window-body ${window.content.isPDF ? 'pdf-window-body' : ''} ${window.content.isBrowser ? 'browser-window-body' : ''} ${window.content.isFolder ? 'folder-window-body' : ''} ${window.content.isMusicMaker ? 'music-maker-window-body' : ''} ${window.content.isMixer ? 'mixer-window-body' : ''} ${window.content.isContactForm ? 'contact-form-window-body' : ''} ${window.content.isSEOChecker ? 'seo-checker-window-body' : ''}`}>
         {window.content.isPDF ? (
           <PDFViewer pdfPath={window.content.pdfPath} />
         ) : window.content.isBrowser ? (
@@ -167,6 +168,8 @@ const Window = ({ window, onClose, onMinimize, onMaximize, onFocus, onMove, isSe
           />
         ) : window.content.isContactForm ? (
           <ContactForm />
+        ) : window.content.isSEOChecker ? (
+          <SEOGeoChecker />
         ) : (
           <div className="window-content">
             <h2>{window.content.title}</h2>
