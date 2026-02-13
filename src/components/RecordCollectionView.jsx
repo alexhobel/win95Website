@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import './RecordCollectionView.css';
 
+// Discogs API configuration
+// Use Vercel API route in production, localhost proxy in development
+const PROXY_URL = import.meta.env.PROD 
+  ? '/api/discogs' 
+  : 'http://localhost:3001';
+const DISCOGS_USERNAME = 'Alex_Hobel';
+
 const RecordCollectionView = ({ onBack }) => {
   const [allCollection, setAllCollection] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,10 +16,6 @@ const RecordCollectionView = ({ onBack }) => {
   const [selectedArtist, setSelectedArtist] = useState('');
   const [filteredCollection, setFilteredCollection] = useState([]);
   const [allArtists, setAllArtists] = useState([]);
-
-  // Discogs API configuration
-  const PROXY_URL = 'http://localhost:3001';
-  const DISCOGS_USERNAME = 'Alex_Hobel';
 
   // Load all records automatically
   useEffect(() => {

@@ -1,6 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import './VinylCollection.css';
 
+// Discogs API configuration
+// Use Vercel API route in production, localhost proxy in development
+const PROXY_URL = import.meta.env.PROD 
+  ? '/api/discogs' 
+  : 'http://localhost:3001';
+const DISCOGS_USERNAME = 'Alex_Hobel';
+
 const VinylCollection = () => {
   const [collection, setCollection] = useState([]);
   const [allCollection, setAllCollection] = useState([]); // Store all loaded items for filtering
@@ -10,11 +17,6 @@ const VinylCollection = () => {
   const [hasMore, setHasMore] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [collectionValue, setCollectionValue] = useState({ total: 0, count: 0 });
-
-  // Discogs API configuration
-  // Using backend proxy to avoid CORS issues
-  const PROXY_URL = 'http://localhost:3001'; // Backend proxy server
-  const DISCOGS_USERNAME = 'Alex_Hobel';
 
   const calculateCollectionValue = useCallback((releases) => {
     try {
