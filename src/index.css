@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  --custom-focus-color: #008080; /* Default teal color */
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -120,6 +124,24 @@ body {
 .title-bar-controls button:active {
   border: 1px inset #c0c0c0;
   background: #808080;
+}
+
+/* Focus styles for form elements using custom color */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 2px;
+}
+
+/* React95 TextInput focus styles */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 1px;
 }
 
 .window-body {

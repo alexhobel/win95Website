@@ -128,6 +128,11 @@
   flex: 1;
 }
 
+.url-input:focus {
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 1px;
+}
+
 .check-button {
   min-width: 100px;
   font-weight: bold;

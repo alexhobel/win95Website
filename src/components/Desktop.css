@@ -6,6 +6,82 @@
   background-color: #54a8a8;
 }
 
+/* Desktop wallpaper patterns - use !important to override base background */
+.desktop.wallpaper-zigzag {
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      #00ced1 0px,
+      #00ced1 20px,
+      #9370db 20px,
+      #9370db 40px
+    ) !important;
+  background-color: transparent !important;
+}
+
+.desktop.wallpaper-rivets {
+  background: 
+    radial-gradient(circle at 20px 20px, #808080 2px, transparent 2px),
+    radial-gradient(circle at 60px 60px, #808080 2px, transparent 2px) !important;
+  background-size: 80px 80px !important;
+  background-color: #c0c0c0 !important;
+}
+
+.desktop.wallpaper-purple-squares {
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      #9370db 0px,
+      #9370db 20px,
+      #dda0dd 20px,
+      #dda0dd 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #9370db 0px,
+      #9370db 20px,
+      #dda0dd 20px,
+      #dda0dd 40px
+    ) !important;
+  background-color: transparent !important;
+}
+
+.desktop.wallpaper-honey {
+  background: 
+    repeating-linear-gradient(
+      60deg,
+      #ffd700 0px,
+      #ffd700 15px,
+      #ffa500 15px,
+      #ffa500 30px
+    ) !important;
+  background-color: transparent !important;
+}
+
+.desktop.wallpaper-water {
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      #00bfff 0px,
+      #00bfff 10px,
+      #1e90ff 10px,
+      #1e90ff 20px,
+      #00bfff 20px,
+      #00bfff 30px
+    ) !important;
+  background-color: transparent !important;
+}
+
+.desktop.wallpaper-noise {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E") !important;
+  background-color: #808080 !important;
+}
+
+.desktop.wallpaper-custom {
+  /* Custom color is applied via inline style */
+}
+
 .desktop-background {
   width: 100%;
   height: calc(100% - 40px);

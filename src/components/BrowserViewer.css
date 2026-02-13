@@ -203,7 +203,8 @@
 }
 
 .address-input:focus {
-  outline: none;
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 1px;
 }
 
 /* Content Area */

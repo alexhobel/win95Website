@@ -15,6 +15,41 @@ const Desktop = () => {
   const zIndexCounterRef = useRef(100);
   const windowIdCounter = useRef(0);
   const musicMakerWindowIdsRef = useRef(new Map()); // Map service.id -> window.id
+  // Load saved settings from localStorage on mount
+  const loadDesktopSettings = () => {
+    if (typeof window !== 'undefined') {
+      const savedWallpaper = localStorage.getItem('desktopWallpaper') || 'zigzag';
+      const savedColor = localStorage.getItem('desktopColor') || '#54a8a8';
+      return { wallpaper: savedWallpaper, color: savedColor };
+    }
+    return { wallpaper: 'zigzag', color: '#54a8a8' };
+  };
+
+  const savedDesktopSettings = loadDesktopSettings();
+  const [desktopWallpaper, setDesktopWallpaper] = useState(savedDesktopSettings.wallpaper);
+  const [desktopColor, setDesktopColor] = useState(savedDesktopSettings.color);
+
+  // Initialize CSS custom property on mount
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty('--custom-focus-color', savedDesktopSettings.color);
+    }
+  }, []);
+
+  // Save settings to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('desktopWallpaper', desktopWallpaper);
+      localStorage.setItem('desktopColor', desktopColor);
+    }
+  }, [desktopWallpaper, desktopColor]);
+
+  // Set CSS custom property for focus color
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty('--custom-focus-color', desktopColor);
+    }
+  }, [desktopColor]);
   
   // Keep ref in sync with state
   useEffect(() => {
@@ -94,8 +129,20 @@ const Desktop = () => {
         description: 'Analyze website SEO',
         isSEOChecker: true
       }
+    },
+    {
+      id: 'display-properties',
+      title: 'Display Properties',
+      icon: '🖥️',
+      content: {
+        title: 'Display Properties',
+        description: 'Change desktop appearance',
+        isDisplayProperties: true,
+        onWallpaperChange: (wallpaper) => setDesktopWallpaper(wallpaper),
+        onColorChange: (color) => setDesktopColor(color)
+      }
     }
-  ], []);
+  ], [desktopWallpaper, desktopColor]);
 
   // Initialize icon positions - arranged in a grid initially
   const getInitialIconPositions = () => {
@@ -519,10 +566,16 @@ const Desktop = () => {
     };
   }, [isSelecting, openWindows, iconPositions, services]);
 
+  // Apply wallpaper class and custom color
+  const desktopClasses = `desktop wallpaper-${desktopWallpaper}`;
+  const desktopStyle = desktopWallpaper === 'custom' 
+    ? { backgroundColor: desktopColor }
+    : {};
+
   return (
     <div 
-      className="desktop" 
-      style={{ backgroundColor: '#54a8a8' }}
+      className={desktopClasses}
+      style={desktopStyle}
       ref={desktopRef}
       onMouseDown={handleDesktopMouseDown}
     >

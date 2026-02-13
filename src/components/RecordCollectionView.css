@@ -93,7 +93,8 @@
 }
 
 .collection-search-input:focus {
-  outline: none;
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 2px;
   border-color: #d4af37;
   box-shadow: 
     inset 0 0 10px rgba(0, 0, 0, 0.5),
@@ -123,6 +124,11 @@
   gap: 10px;
 }
 
+.artist-filter-select:focus {
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 2px;
+}
+
 .filter-label {
   font-size: 14px;
   color: #d4af37;
@@ -148,7 +154,8 @@
 }
 
 .artist-filter-select:focus {
-  outline: none;
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 2px;
   border-color: #d4af37;
   box-shadow: 
     inset 0 0 10px rgba(0, 0, 0, 0.5),

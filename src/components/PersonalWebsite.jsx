@@ -9,7 +9,10 @@ const PersonalWebsite = () => {
   const [showRecordCollection, setShowRecordCollection] = useState(false);
 
   useEffect(() => {
-    setIsLoaded(true);
+    // Defer setState to avoid synchronous state update
+    setTimeout(() => {
+      setIsLoaded(true);
+    }, 0);
     // Simulate visitor counter increment
     const interval = setInterval(() => {
       setVisitorCount(prev => prev + Math.floor(Math.random() * 3));

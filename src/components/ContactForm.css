@@ -116,6 +116,20 @@
   flex: 1;
 }
 
+/* Focus styles for form inputs */
+.subject-input:focus,
+.message-input:focus {
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 1px;
+}
+
+/* Focus styles for react95 TextInput components */
+.contact-form-content input:focus,
+.contact-form-content textarea:focus {
+  outline: 2px dotted var(--custom-focus-color) !important;
+  outline-offset: 1px;
+}
+
 /* Message Body */
 .message-body-container {
   flex: 1;
