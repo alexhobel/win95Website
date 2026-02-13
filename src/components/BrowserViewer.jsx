@@ -58,27 +58,8 @@ const BrowserViewer = ({ onUrlChange }) => {
     setLoadingProgress(0);
   };
 
-  const handleStop = () => {
-    setIsLoading(false);
-    setLoadingProgress(0);
-    if (loadingIntervalRef.current) {
-      clearInterval(loadingIntervalRef.current);
-      loadingIntervalRef.current = null;
-    }
-  };
-
   return (
     <div className="browser-viewer-container">
-      {/* Menu Bar */}
-      <Toolbar className="browser-menu-bar">
-        <Button variant="menu" size="sm">File</Button>
-        <Button variant="menu" size="sm">Edit</Button>
-        <Button variant="menu" size="sm">View</Button>
-        <Button variant="menu" size="sm">Favorites</Button>
-        <Button variant="menu" size="sm">Tools</Button>
-        <Button variant="menu" size="sm" style={{ marginLeft: 'auto' }}>?</Button>
-      </Toolbar>
-
       {/* Toolbar */}
       <div className="browser-toolbar-container">
         <Toolbar className="browser-toolbar">
@@ -90,10 +71,6 @@ const BrowserViewer = ({ onUrlChange }) => {
             <span className="toolbar-icon">▶</span>
             <span className="toolbar-text">Forward</span>
           </Button>
-          <Button size="sm" className="toolbar-button-custom" onClick={handleStop}>
-            <span className="toolbar-icon">■</span>
-            <span className="toolbar-text">Stop</span>
-          </Button>
           <Button size="sm" className="toolbar-button-custom" onClick={handleRefresh}>
             <span className="toolbar-icon">↻</span>
             <span className="toolbar-text">Refresh</span>
@@ -101,28 +78,6 @@ const BrowserViewer = ({ onUrlChange }) => {
           <Button size="sm" className="toolbar-button-custom">
             <span className="toolbar-icon">⌂</span>
             <span className="toolbar-text">Home</span>
-          </Button>
-          <div className="toolbar-separator"></div>
-          <Button size="sm" className="toolbar-button-custom">
-            <span className="toolbar-icon">🔍</span>
-            <span className="toolbar-text">Search</span>
-          </Button>
-          <Button size="sm" className="toolbar-button-custom">
-            <span className="toolbar-icon">⭐</span>
-            <span className="toolbar-text">Favorites</span>
-          </Button>
-          <Button size="sm" className="toolbar-button-custom">
-            <span className="toolbar-icon">🕐</span>
-            <span className="toolbar-text">History</span>
-          </Button>
-          <div className="toolbar-separator"></div>
-          <Button size="sm" className="toolbar-button-custom">
-            <span className="toolbar-icon">✉</span>
-            <span className="toolbar-text">Mail</span>
-          </Button>
-          <Button size="sm" className="toolbar-button-custom">
-            <span className="toolbar-icon">🖨</span>
-            <span className="toolbar-text">Print</span>
           </Button>
         </Toolbar>
       </div>

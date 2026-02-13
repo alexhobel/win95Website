@@ -54,6 +54,10 @@ const Window = ({ window, onClose, onMinimize, onMaximize, onFocus, onMove, isSe
 
   const handleMouseDown = (e) => {
     if (windowRef.current && !window.maximized) {
+      const isMobile = window.innerWidth <= 768;
+      // Disable dragging on mobile
+      if (isMobile) return;
+      
       const rect = windowRef.current.getBoundingClientRect();
       setDragOffset({
         x: e.clientX - rect.left,
@@ -66,6 +70,10 @@ const Window = ({ window, onClose, onMinimize, onMaximize, onFocus, onMove, isSe
 
   const handleTouchStart = (e) => {
     if (windowRef.current && !window.maximized) {
+      const isMobile = window.innerWidth <= 768;
+      // Disable dragging on mobile
+      if (isMobile) return;
+      
       const touch = e.touches[0];
       const rect = windowRef.current.getBoundingClientRect();
       setDragOffset({

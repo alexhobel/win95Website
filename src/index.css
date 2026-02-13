@@ -71,6 +71,46 @@ body {
   align-items: center;
   justify-content: center;
   color: #000;
+  min-width: 16px;
+  min-height: 14px;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .title-bar {
+    height: 44px;
+    padding: 4px 8px;
+    font-size: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .title-bar-controls {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .title-bar-controls button {
+    width: 44px;
+    height: 36px;
+    min-width: 44px;
+    min-height: 36px;
+    font-size: 18px;
+    border: 2px outset #c0c0c0;
+  }
+
+  .title-bar-text {
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+
+  .browser-title-text {
+    font-size: 11px;
+  }
 }
 
 .title-bar-controls button:hover {
@@ -86,4 +126,14 @@ body {
   background: #c0c0c0;
   border: 2px inset #c0c0c0;
   padding: 2px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  .window-body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 88px); /* Account for title bar (44px) + taskbar (40px) + padding */
+  }
 }

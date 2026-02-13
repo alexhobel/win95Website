@@ -139,8 +139,12 @@ const Desktop = () => {
       // Constrain initial position to viewport
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight - 40; // Account for taskbar
-      const constrainedX = Math.max(0, Math.min(initialX, viewportWidth - windowWidth));
-      const constrainedY = Math.max(0, Math.min(initialY, viewportHeight - windowHeight));
+      // On mobile, center windows and make them full width
+      const isMobile = viewportWidth <= 768;
+      const constrainedX = isMobile ? 0 : Math.max(0, Math.min(initialX, viewportWidth - windowWidth));
+      const constrainedY = isMobile ? 0 : Math.max(0, Math.min(initialY, viewportHeight - windowHeight));
+      const finalWidth = isMobile ? viewportWidth : windowWidth;
+      const finalHeight = isMobile ? Math.min(windowHeight, viewportHeight) : windowHeight;
       
       const musicMakerWindowId = `${service.id}-${windowIdCounter.current}`;
       
@@ -262,12 +266,12 @@ const Desktop = () => {
         zIndex: zIndexCounter,
         minimized: false,
         maximized: false,
-        width: windowWidth,
-        height: windowHeight,
+        width: finalWidth,
+        height: finalHeight,
         originalX: constrainedX,
         originalY: constrainedY,
-        originalWidth: windowWidth,
-        originalHeight: windowHeight
+        originalWidth: finalWidth,
+        originalHeight: finalHeight
       };
       setOpenWindows([...openWindows, newWindow]);
       setZIndexCounter(zIndexCounter + 1);
@@ -303,9 +307,10 @@ const Desktop = () => {
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight - 40; // 40px for taskbar
         
-        // Constrain position to viewport
-        const constrainedX = Math.max(0, Math.min(x, viewportWidth - windowWidth));
-        const constrainedY = Math.max(0, Math.min(y, viewportHeight - windowHeight));
+        // On mobile, keep windows at top-left and prevent dragging
+        const isMobile = viewportWidth <= 768;
+        const constrainedX = isMobile ? 0 : Math.max(0, Math.min(x, viewportWidth - windowWidth));
+        const constrainedY = isMobile ? 0 : Math.max(0, Math.min(y, viewportHeight - windowHeight));
         
         return { ...w, x: constrainedX, y: constrainedY };
       }
