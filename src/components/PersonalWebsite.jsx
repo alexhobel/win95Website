@@ -175,6 +175,9 @@ const PersonalWebsite = () => {
               When I'm not coding, I'm making music, playing in a band, and producing tracks in my studio.
               I love collecting vinyl records and discovering new sounds from different eras.
             </p>
+            <p className="retro-text">
+              I'm a total <span className="highlight-red">tapir nerd</span> - they're my favorite animals! 🐾
+            </p>
           </div>
         </div>
 
