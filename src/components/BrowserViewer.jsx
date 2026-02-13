@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { Toolbar, Button, Frame } from 'react95';
-import RetroWebsite from './RetroWebsite';
+import PersonalWebsite from './PersonalWebsite';
+import BusinessWebsite from './BusinessWebsite';
 import browserIcon from '../assets/BrowserIcon.webp';
 import './BrowserViewer.css';
 
 const BrowserViewer = ({ onUrlChange }) => {
+  const [activeTab, setActiveTab] = useState('personal');
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [url, setUrl] = useState('http://alexanderhobelsberger.de');
+  const [url, setUrl] = useState('http://alexanderhobelsberger.de/personal');
   const loadingIntervalRef = useRef(null);
 
   // Notify parent of URL changes
@@ -28,7 +30,7 @@ const BrowserViewer = ({ onUrlChange }) => {
       }, 0);
       
       loadingIntervalRef.current = setInterval(() => {
-        progress += Math.random() * 15;
+        progress += Math.random() * 20 + 12; // Moderate progress: 12-32 per interval
         if (progress >= 100) {
           progress = 100;
           if (loadingIntervalRef.current) {
@@ -38,11 +40,11 @@ const BrowserViewer = ({ onUrlChange }) => {
           setLoadingProgress(100);
           setTimeout(() => {
             setIsLoading(false);
-          }, 300);
+          }, 200); // Moderate delay before showing content
         } else {
           setLoadingProgress(progress);
         }
-      }, 100);
+      }, 80); // Moderate interval: 80ms
 
       return () => {
         if (loadingIntervalRef.current) {
@@ -52,6 +54,7 @@ const BrowserViewer = ({ onUrlChange }) => {
       };
     }
   }, [isLoading]);
+
 
   const handleRefresh = () => {
     setIsLoading(true);
@@ -80,6 +83,42 @@ const BrowserViewer = ({ onUrlChange }) => {
             <span className="toolbar-text">Home</span>
           </Button>
         </Toolbar>
+      </div>
+
+      {/* Tabs */}
+      <div className="browser-tabs">
+        <button
+          className={`browser-tab ${activeTab === 'personal' ? 'active' : ''}`}
+          onClick={() => {
+            const newUrl = 'http://alexanderhobelsberger.de/personal';
+            setActiveTab('personal');
+            setUrl(newUrl);
+            if (onUrlChange) {
+              setTimeout(() => onUrlChange(newUrl), 0);
+            }
+            // Don't show loading when switching tabs after initial load
+          }}
+        >
+          <span className="tab-icon">🎵</span>
+          <span className="tab-text">Personal</span>
+          {activeTab === 'personal' && <span className="tab-close">×</span>}
+        </button>
+        <button
+          className={`browser-tab ${activeTab === 'business' ? 'active' : ''}`}
+          onClick={() => {
+            const newUrl = 'http://alexanderhobelsberger.de/business';
+            setActiveTab('business');
+            setUrl(newUrl);
+            if (onUrlChange) {
+              setTimeout(() => onUrlChange(newUrl), 0);
+            }
+            // Don't show loading when switching tabs after initial load
+          }}
+        >
+          <span className="tab-icon">💼</span>
+          <span className="tab-text">Business</span>
+          {activeTab === 'business' && <span className="tab-close">×</span>}
+        </button>
       </div>
 
       {/* Address Bar */}
@@ -123,7 +162,7 @@ const BrowserViewer = ({ onUrlChange }) => {
             </div>
           </div>
         ) : (
-          <RetroWebsite />
+          activeTab === 'personal' ? <PersonalWebsite /> : <BusinessWebsite />
         )}
       </div>
 

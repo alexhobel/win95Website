@@ -26,12 +26,7 @@
 }
 
 .retro-website.loaded {
-  animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  /* No animation - instant display */
 }
 
 /* Animated Background Pattern */
