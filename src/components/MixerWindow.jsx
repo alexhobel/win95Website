@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import mixerIcon from '../assets/windows98-icons/ico/mixer_sound.ico';
 import './MixerWindow.css';
 
 const MixerWindow = ({ drumVolume, synthVolume, onDrumVolumeChange, onSynthVolumeChange }) => {
   return (
     <div className="mixer-window-container">
-      <h3 className="mixer-window-title">🎚️ Mixer 🎚️</h3>
+      <h3 className="mixer-window-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+        <img src={mixerIcon} alt="Mixer" style={{ width: '24px', height: '24px', imageRendering: 'pixelated' }} />
+        Mixer
+      </h3>
       <div className="mixer-controls">
         <div className="mixer-channel">
           <div className="mixer-channel-label">Drums</div>

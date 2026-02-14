@@ -61,4 +61,15 @@
   background: #c0c0c0 !important;
 }
 
+/* Highlighted menu item when submenu is open */
+.menu-item-highlighted {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+}
+
+.menu-item-highlighted:hover {
+  background-color: #000080 !important;
+  color: #ffffff !important;
+}
+
 

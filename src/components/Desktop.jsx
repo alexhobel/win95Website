@@ -4,9 +4,12 @@ import Window from './Window';
 import Taskbar from './Taskbar';
 import AppBarComponent from './AppBar';
 import cvPdf from '../assets/CV .pdf';
-import browserIcon from '../assets/BrowserIcon.webp';
-import folderIcon from '../assets/FolderIcon.png';
-import mailIcon from '../assets/MailIcon.png';
+import browserIcon from '../assets/windows98-icons/ico/internet_connection_wiz.ico';
+import folderIcon from '../assets/windows98-icons/ico/directory_closed_cool.ico';
+import mailIcon from '../assets/windows98-icons/ico/mailbox_world.ico';
+import musicMakerIcon from '../assets/windows98-icons/ico/loudspeaker_wave.ico';
+import seoCheckerIcon from '../assets/windows98-icons/ico/magnifying_glass.ico';
+import settingsIcon from '../assets/windows98-icons/ico/settings_gear.ico';
 import './Desktop.css';
 
 const Desktop = () => {
@@ -90,11 +93,11 @@ const Desktop = () => {
     },
     {
       id: 'browser',
-      title: 'Internet Explorer',
+      title: 'Internet',
       icon: browserIcon,
       iconType: 'image',
       content: {
-        title: 'Internet Explorer',
+        title: 'Internet',
         description: 'Browse the web',
         isBrowser: true
       }
@@ -102,7 +105,8 @@ const Desktop = () => {
     {
       id: 'music-maker',
       title: 'Music Maker',
-      icon: '🎶',
+      icon: musicMakerIcon,
+      iconType: 'image',
       content: {
         title: 'Music Maker',
         description: 'Create awesome tunes!',
@@ -123,7 +127,8 @@ const Desktop = () => {
     {
       id: 'seo-checker',
       title: 'SEO/GEO Checker',
-      icon: '🔍',
+      icon: seoCheckerIcon,
+      iconType: 'image',
       content: {
         title: 'SEO/GEO Checker',
         description: 'Analyze website SEO',
@@ -133,7 +138,8 @@ const Desktop = () => {
     {
       id: 'display-properties',
       title: 'Display Properties',
-      icon: '🖥️',
+      icon: settingsIcon,
+      iconType: 'image',
       content: {
         title: 'Display Properties',
         description: 'Change desktop appearance',
@@ -147,7 +153,9 @@ const Desktop = () => {
   // Initialize icon positions - arranged in a grid initially
   const getInitialIconPositions = () => {
     const positions = {};
-    services.forEach((service, index) => {
+    // Only position icons that are visible on desktop (exclude display-properties)
+    const desktopServices = services.filter(service => service.id !== 'display-properties');
+    desktopServices.forEach((service, index) => {
       const col = index % 3;
       const row = Math.floor(index / 3);
       positions[service.id] = {
@@ -526,9 +534,9 @@ const Desktop = () => {
           }
         });
         
-        // Check which icons intersect the selection
+        // Check which icons intersect the selection (exclude display-properties)
         const newSelectedIcons = new Set();
-        services.forEach(service => {
+        services.filter(service => service.id !== 'display-properties').forEach(service => {
           const iconPos = iconPositions[service.id];
           if (iconPos) {
             const iconRect = {
@@ -580,7 +588,7 @@ const Desktop = () => {
       onMouseDown={handleDesktopMouseDown}
     >
       <div className="desktop-background">
-        {services.map((service) => (
+        {services.filter(service => service.id !== 'display-properties').map((service) => (
           <DesktopIcon
             key={service.id}
             icon={service.icon}

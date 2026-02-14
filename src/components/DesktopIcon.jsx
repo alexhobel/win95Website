@@ -56,12 +56,16 @@ const DesktopIcon = ({ icon, title, onClick, position, onPositionChange, isSelec
       const rect = iconRef.current.getBoundingClientRect();
       const desktop = iconRef.current.closest('.desktop-background');
       if (desktop) {
+        // Calculate offset from the icon container, not the event target
+        // This ensures consistent behavior whether clicking on image or container
         setDragOffset({
           x: e.clientX - rect.left,
           y: e.clientY - rect.top
         });
         setIsDragging(true);
         setHasMoved(false);
+        // Prevent default to avoid text selection and image dragging
+        e.preventDefault();
       }
     }
   };
@@ -88,11 +92,11 @@ const DesktopIcon = ({ icon, title, onClick, position, onPositionChange, isSelec
     >
       <div className="desktop-icon-image">
         {typeof icon === 'string' && (icon.includes('/') || icon.includes('.')) ? (
-          <img src={icon} alt={title} className="desktop-icon-img" />
+          <img src={icon} alt={title} className="desktop-icon-img" draggable="false" />
         ) : typeof icon === 'string' ? (
           icon
         ) : (
-          <img src={icon} alt={title} className="desktop-icon-img" />
+          <img src={icon} alt={title} className="desktop-icon-img" draggable="false" />
         )}
       </div>
       <div className="desktop-icon-label">{title}</div>

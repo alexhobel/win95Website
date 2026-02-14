@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import mixerIcon from '../assets/windows98-icons/ico/mixer_sound.ico';
 import './MusicMaker.css';
 
 const MusicMaker = ({ drumVolume: propDrumVolume, synthVolume: propSynthVolume, onOpenMixer }) => {
@@ -291,8 +292,10 @@ const MusicMaker = ({ drumVolume: propDrumVolume, synthVolume: propSynthVolume, 
             }}
             title="Open Mixer Window"
             disabled={!onOpenMixer}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
           >
-            🎚️ Open Mixer
+            <img src={mixerIcon} alt="Mixer" style={{ width: '16px', height: '16px', imageRendering: 'pixelated' }} />
+            Open Mixer
           </button>
         </div>
       </div>
