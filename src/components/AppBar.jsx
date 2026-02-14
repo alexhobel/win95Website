@@ -152,7 +152,7 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
                       </MenuListItem>
                       <MenuListItem onClick={() => handleMenuClick('seo-checker')} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <img src={seoCheckerIcon} alt="SEO Checker" style={{ width: '24px', height: '24px', imageRendering: 'pixelated' }} />
-                        SEO/Geo Checker
+                        SEO Checker
                       </MenuListItem>
                     </MenuList>
                   )}

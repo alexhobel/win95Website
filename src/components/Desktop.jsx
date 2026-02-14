@@ -126,11 +126,11 @@ const Desktop = () => {
     },
     {
       id: 'seo-checker',
-      title: 'SEO/GEO Checker',
+      title: 'SEO Checker',
       icon: seoCheckerIcon,
       iconType: 'image',
       content: {
-        title: 'SEO/GEO Checker',
+        title: 'SEO Checker',
         description: 'Analyze website SEO',
         isSEOChecker: true
       }
@@ -416,6 +416,70 @@ const Desktop = () => {
     }));
   };
 
+  const updateWindowSize = (windowId, width, height, x, y) => {
+    setOpenWindows(openWindows.map(w => {
+      if (w.id === windowId) {
+        // Get minimum dimensions based on window type
+        const minWidth = w.content.isPDF ? 600 : w.content.isBrowser ? 600 : w.content.isFolder ? 400 : w.content.isMusicMaker ? 600 : w.content.isContactForm ? 500 : w.content.isSEOChecker ? 900 : 400;
+        const minHeight = w.content.isPDF ? 400 : w.content.isBrowser ? 400 : w.content.isFolder ? 300 : w.content.isMusicMaker ? 400 : w.content.isContactForm ? 400 : w.content.isSEOChecker ? 700 : 300;
+        
+        // Calculate viewport boundaries
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight - 40; // 40px for taskbar
+        
+        // Constrain to minimum dimensions
+        let constrainedWidth = Math.max(minWidth, width);
+        let constrainedHeight = Math.max(minHeight, height);
+        
+        // Constrain to viewport
+        const finalWidth = Math.min(constrainedWidth, viewportWidth);
+        const finalHeight = Math.min(constrainedHeight, viewportHeight);
+        
+        // Adjust position if window would go out of bounds
+        let finalX = x !== undefined ? x : w.x;
+        let finalY = y !== undefined ? y : w.y;
+        
+        // Ensure window doesn't go off-screen on the left
+        if (finalX < 0) {
+          finalX = 0;
+        }
+        // Ensure window doesn't go off-screen on the top
+        if (finalY < 0) {
+          finalY = 0;
+        }
+        // Ensure window doesn't go off-screen on the right
+        if (finalX + finalWidth > viewportWidth) {
+          finalX = Math.max(0, viewportWidth - finalWidth);
+        }
+        // Ensure window doesn't go off-screen on the bottom
+        if (finalY + finalHeight > viewportHeight) {
+          finalY = Math.max(0, viewportHeight - finalHeight);
+        }
+        
+        // If width/height were constrained, adjust position for left/top resizing
+        if (width < minWidth && x !== undefined) {
+          // Window was resized from left but hit minimum - keep right edge fixed
+          finalX = w.x + w.width - finalWidth;
+        }
+        if (height < minHeight && y !== undefined) {
+          // Window was resized from top but hit minimum - keep bottom edge fixed
+          finalY = w.y + w.height - finalHeight;
+        }
+        
+        return { 
+          ...w, 
+          width: finalWidth, 
+          height: finalHeight,
+          x: finalX,
+          y: finalY,
+          originalWidth: w.originalWidth || finalWidth,
+          originalHeight: w.originalHeight || finalHeight
+        };
+      }
+      return w;
+    }));
+  };
+
   const updateIconPosition = (iconId, x, y) => {
     setIconPositions(prev => {
       const updated = {
@@ -651,6 +715,7 @@ const Desktop = () => {
           onMaximize={() => maximizeWindow(window.id)}
           onFocus={() => bringToFront(window.id)}
           onMove={(x, y) => updateWindowPosition(window.id, x, y)}
+          onResize={(width, height, x, y) => updateWindowSize(window.id, width, height, x, y)}
           isSelected={selectedWindowIds.has(window.id)}
         />
       ))}

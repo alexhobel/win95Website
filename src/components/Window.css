@@ -303,6 +303,11 @@
   max-height: 700px;
 }
 
+.window.seo-checker-window.maximized {
+  max-width: none;
+  max-height: none;
+}
+
 .seo-checker-window-body {
   padding: 0;
   flex: 1;
