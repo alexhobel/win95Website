@@ -622,6 +622,12 @@ const Desktop = () => {
       {/* React95 AppBar with window tabs */}
       <AppBarComponent 
         windows={openWindows}
+        onOpenWindow={(serviceId) => {
+          const service = services.find(s => s.id === serviceId);
+          if (service) {
+            openWindow(service);
+          }
+        }}
         onWindowClick={(windowId) => {
           const window = openWindows.find(w => w.id === windowId);
           if (window) {

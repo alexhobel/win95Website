@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AppBar, Toolbar, Button, MenuList, MenuListItem, Separator } from 'react95';
+import browserIcon from '../assets/BrowserIcon.webp';
+import folderIcon from '../assets/FolderIcon.png';
+import mailIcon from '../assets/MailIcon.png';
 import './AppBar.css';
 
 // Windows 95-style logo with 4 colored panes (red, green, blue, yellow)
@@ -12,9 +15,11 @@ const WindowsLogo = () => (
   </svg>
 );
 
-export default function AppBarComponent({ windows = [], onWindowClick }) {
+export default function AppBarComponent({ windows = [], onWindowClick, onOpenWindow }) {
   const [open, setOpen] = useState(false);
+  const [programsOpen, setProgramsOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const menuRef = useRef(null);
 
   // Update time every second
   useEffect(() => {
@@ -24,11 +29,36 @@ export default function AppBarComponent({ windows = [], onWindowClick }) {
     return () => clearInterval(timer);
   }, []);
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpen(false);
+        setProgramsOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [open]);
+
   const formattedTime = currentTime.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true
   });
+
+  const handleMenuClick = (serviceId) => {
+    if (onOpenWindow) {
+      onOpenWindow(serviceId);
+    }
+    setOpen(false);
+    setProgramsOpen(false);
+  };
   
   return (
     <AppBar 
@@ -46,7 +76,7 @@ export default function AppBarComponent({ windows = [], onWindowClick }) {
     >
       <Toolbar style={{ justifyContent: 'space-between', padding: '0 4px', height: '100%', gap: '4px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flex: 1 }}>
-          <div style={{ position: 'relative', display: 'inline-block' }}>
+          <div ref={menuRef} style={{ position: 'relative', display: 'inline-block' }}>
             <Button
               onClick={() => setOpen(!open)}
               active={open}
@@ -69,28 +99,85 @@ export default function AppBarComponent({ windows = [], onWindowClick }) {
                   left: '0',
                   bottom: '100%',
                   marginBottom: '4px',
-                  zIndex: 10001
+                  zIndex: 10001,
+                  minWidth: '200px'
                 }}
-                onClick={() => setOpen(false)}
               >
-                <MenuListItem>
-                  <span role='img' aria-label='👨‍💻'>
-                    👨‍💻
-                  </span>
-                  Profile
+                <div
+                  onMouseEnter={() => setProgramsOpen(true)}
+                  onMouseLeave={() => setProgramsOpen(false)}
+                  style={{ position: 'relative' }}
+                >
+                  <MenuListItem style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <img src={folderIcon} alt="Folder" style={{ width: '20px', height: '20px', imageRendering: 'pixelated' }} />
+                    Programs
+                  </MenuListItem>
+                  {programsOpen && (
+                    <MenuList
+                      onMouseEnter={() => setProgramsOpen(true)}
+                      onMouseLeave={() => setProgramsOpen(false)}
+                      style={{
+                        position: 'absolute',
+                        left: '100%',
+                        top: '0',
+                        marginLeft: '4px',
+                        zIndex: 10002,
+                        minWidth: '180px'
+                      }}
+                    >
+                      <MenuListItem onClick={() => handleMenuClick('browser')} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <img src={browserIcon} alt="Browser" style={{ width: '20px', height: '20px', imageRendering: 'pixelated' }} />
+                        Internet Explorer
+                      </MenuListItem>
+                      <MenuListItem onClick={() => handleMenuClick('music-maker')} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span role='img' aria-label='🎶' style={{ fontSize: '20px' }}>
+                          🎶
+                        </span>
+                        Music Maker
+                      </MenuListItem>
+                      <MenuListItem onClick={() => handleMenuClick('contact')} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <img src={mailIcon} alt="Mail" style={{ width: '20px', height: '20px', imageRendering: 'pixelated' }} />
+                        Contact me
+                      </MenuListItem>
+                      <MenuListItem onClick={() => handleMenuClick('seo-checker')} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span role='img' aria-label='🔍' style={{ fontSize: '20px' }}>
+                          🔍
+                        </span>
+                        SEO/Geo Checker
+                      </MenuListItem>
+                    </MenuList>
+                  )}
+                </div>
+                <MenuListItem onClick={() => handleMenuClick('personal-documents')} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <img src={folderIcon} alt="Folder" style={{ width: '20px', height: '20px', imageRendering: 'pixelated' }} />
+                  Documents
                 </MenuListItem>
-                <MenuListItem>
-                  <span role='img' aria-label='📁'>
-                    📁
+                <Separator />
+                <MenuListItem onClick={() => handleMenuClick('display-properties')} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span role='img' aria-label='🖥️' style={{ fontSize: '20px' }}>
+                    🖥️
                   </span>
-                  My account
+                  Settings
                 </MenuListItem>
                 <Separator />
                 <MenuListItem disabled>
-                  <span role='img' aria-label='🔙'>
-                    🔙
+                  <span role='img' aria-label='❓' style={{ fontSize: '20px' }}>
+                    ❓
                   </span>
-                  Logout
+                  Help
+                </MenuListItem>
+                <MenuListItem disabled>
+                  <span role='img' aria-label='▶️' style={{ fontSize: '20px' }}>
+                    ▶️
+                  </span>
+                  Run...
+                </MenuListItem>
+                <Separator />
+                <MenuListItem disabled>
+                  <span role='img' aria-label='⏻' style={{ fontSize: '20px' }}>
+                    ⏻
+                  </span>
+                  Shut Down...
                 </MenuListItem>
               </MenuList>
             )}
