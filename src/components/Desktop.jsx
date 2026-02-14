@@ -150,23 +150,44 @@ const Desktop = () => {
     }
   ], [desktopWallpaper, desktopColor]);
 
-  // Initialize icon positions - arranged in a grid initially
-  const getInitialIconPositions = () => {
-    const positions = {};
-    // Only position icons that are visible on desktop (exclude display-properties)
-    const desktopServices = services.filter(service => service.id !== 'display-properties');
-    desktopServices.forEach((service, index) => {
-      const col = index % 3;
-      const row = Math.floor(index / 3);
-      positions[service.id] = {
-        x: 20 + col * 100,
-        y: 20 + row * 100
-      };
-    });
-    return positions;
-  };
+  // Initialize icon positions state - load from localStorage or use default grid
+  const [iconPositions, setIconPositions] = useState(() => {
+    // This will be called once on mount, but services might not be fully initialized
+    // So we'll load from localStorage if available, otherwise return empty object
+    // and let the useMemo below handle the initialization
+    if (typeof window !== 'undefined') {
+      const savedPositions = localStorage.getItem('desktopIconPositions');
+      if (savedPositions) {
+        try {
+          return JSON.parse(savedPositions);
+        } catch (e) {
+          console.error('Error parsing saved icon positions:', e);
+        }
+      }
+    }
+    return {};
+  });
   
-  const [iconPositions, setIconPositions] = useState(() => getInitialIconPositions());
+  // Compute complete icon positions (merge saved positions with defaults for missing services)
+  const completeIconPositions = useMemo(() => {
+    const desktopServices = services.filter(service => service.id !== 'display-properties');
+    const positions = { ...iconPositions };
+    
+    desktopServices.forEach(service => {
+      if (!positions[service.id]) {
+        // Calculate default grid position for missing services
+        const index = desktopServices.findIndex(s => s.id === service.id);
+        const col = index % 3;
+        const row = Math.floor(index / 3);
+        positions[service.id] = {
+          x: 20 + col * 100,
+          y: 20 + row * 100
+        };
+      }
+    });
+    
+    return positions;
+  }, [services, iconPositions]);
 
   const openWindow = (service) => {
     // Check if a window for this service is already open
@@ -396,10 +417,17 @@ const Desktop = () => {
   };
 
   const updateIconPosition = (iconId, x, y) => {
-    setIconPositions(prev => ({
-      ...prev,
-      [iconId]: { x, y }
-    }));
+    setIconPositions(prev => {
+      const updated = {
+        ...prev,
+        [iconId]: { x, y }
+      };
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('desktopIconPositions', JSON.stringify(updated));
+      }
+      return updated;
+    });
   };
 
   // Constrain a window position to viewport
@@ -537,7 +565,7 @@ const Desktop = () => {
         // Check which icons intersect the selection (exclude display-properties)
         const newSelectedIcons = new Set();
         services.filter(service => service.id !== 'display-properties').forEach(service => {
-          const iconPos = iconPositions[service.id];
+          const iconPos = completeIconPositions[service.id];
           if (iconPos) {
             const iconRect = {
               left: iconPos.x,
@@ -572,7 +600,7 @@ const Desktop = () => {
       document.removeEventListener('mousemove', handleMove);
       document.removeEventListener('mouseup', handleUp);
     };
-  }, [isSelecting, openWindows, iconPositions, services]);
+  }, [isSelecting, openWindows, completeIconPositions, services]);
 
   // Apply wallpaper class and custom color
   const desktopClasses = `desktop wallpaper-${desktopWallpaper}`;
@@ -593,7 +621,7 @@ const Desktop = () => {
             key={service.id}
             icon={service.icon}
             title={service.title}
-            position={iconPositions[service.id]}
+            position={completeIconPositions[service.id] || { x: 20, y: 20 }}
             onClick={() => openWindow(service)}
             onPositionChange={(x, y) => updateIconPosition(service.id, x, y)}
             isSelected={selectedIconIds.has(service.id)}
