@@ -1,0 +1,20 @@
+{
+  "name": "Alexander Hobelsberger Website - Retro 90s Style Website",
+  "short_name": "AH Website",
+  "description": "A nostalgic 90s retro website by Alexander Hobelsberger featuring Windows 95/98-style interface and creative projects.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#c0c0c0",
+  "theme_color": "#c0c0c0",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["entertainment", "design"],
+  "lang": "en-US"
+}
+

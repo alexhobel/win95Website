@@ -1,0 +1,33 @@
+# Temporarily blocking all search engines until site is ready
+User-agent: *
+Disallow: /
+
+# Google-specific block
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Googlebot-Image
+Disallow: /
+
+User-agent: Googlebot-Mobile
+Disallow: /
+
+# Other common search engines
+User-agent: Bingbot
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+# Sitemap will be enabled when ready
+# Sitemap: https://alexanderhobelsberger.de/sitemap.xml
+

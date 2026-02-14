@@ -18,26 +18,31 @@ const BrowserViewer = ({ onUrlChange }) => {
     }
   }, [url, onUrlChange]);
 
-  // Simulate loading state using react95 ProgressBar pattern
+  // Simulate loading state using react95 ProgressBar pattern - faster loading
   useEffect(() => {
     if (!isLoading) return;
     
-    const timer = setInterval(() => {
+    let timer;
+    let timeoutId;
+    
+    timer = setInterval(() => {
       setLoadingProgress(previousPercent => {
-        if (previousPercent === 100) {
-          // When reaching 100%, wait a bit before hiding loading
-          setTimeout(() => {
+        if (previousPercent >= 100) {
+          // When reaching 100%, directly open the page (no reset to 0)
+          clearInterval(timer);
+          timeoutId = setTimeout(() => {
             setIsLoading(false);
-          }, 200);
-          return 0;
+          }, 100);
+          return 100; // Keep at 100, don't reset
         }
-        const diff = Math.random() * 10;
+        const diff = Math.random() * 15 + 5; // Faster: 5-20 per interval
         return Math.min(previousPercent + diff, 100);
       });
-    }, 500);
+    }, 100); // Faster: 100ms intervals instead of 500ms
     
     return () => {
-      clearInterval(timer);
+      if (timer) clearInterval(timer);
+      if (timeoutId) clearTimeout(timeoutId);
     };
   }, [isLoading]);
 
@@ -134,10 +139,7 @@ const BrowserViewer = ({ onUrlChange }) => {
               </div>
               <div className="ie-loading-text">Opening page...</div>
               <div className="ie-progress-container" style={{ width: '100%', maxWidth: '400px', margin: '20px auto' }}>
-                <ProgressBar value={Math.floor(loadingProgress)} />
-              </div>
-              <div className="ie-status-text">
-                {loadingProgress < 100 ? `Loading ${Math.round(loadingProgress)}%...` : 'Done'}
+                <ProgressBar value={Math.floor(loadingProgress)} style={{ width: '100%' }} />
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { AppBar, Toolbar, Button, MenuList, MenuListItem, Separator, Tooltip } from 'react95';
+import { AppBar, Toolbar, Button, MenuList, MenuListItem, Separator } from 'react95';
 import browserIcon from '../assets/windows98-icons/ico/internet_connection_wiz.ico';
 import folderIcon from '../assets/windows98-icons/ico/directory_closed_cool.ico';
 import mailIcon from '../assets/windows98-icons/ico/mailbox_world.ico';
@@ -23,7 +23,10 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
   const [open, setOpen] = useState(false);
   const [programsOpen, setProgramsOpen] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showTooltip, setShowTooltip] = useState(false);
   const menuRef = useRef(null);
+  const tooltipRef = useRef(null);
+  const buttonRef = useRef(null);
 
   // Update time every second
   useEffect(() => {
@@ -93,6 +96,35 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
       }
     }
   };
+
+  // Position tooltip above button
+  useEffect(() => {
+    if (showTooltip && buttonRef.current && tooltipRef.current) {
+      const updatePosition = () => {
+        if (!buttonRef.current || !tooltipRef.current) return;
+        
+        const buttonRect = buttonRef.current.getBoundingClientRect();
+        
+        // Position above the button, centered
+        const tooltipWidth = 220; // Approximate width of tooltip text
+        const left = buttonRect.left + (buttonRect.width / 2) - (tooltipWidth / 2);
+        const bottom = window.innerHeight - buttonRect.top + 8; // 8px above button
+        const constrainedLeft = Math.max(10, Math.min(left, window.innerWidth - tooltipWidth - 10));
+        
+        tooltipRef.current.style.position = 'fixed';
+        tooltipRef.current.style.left = `${constrainedLeft}px`;
+        tooltipRef.current.style.bottom = `${bottom}px`;
+        tooltipRef.current.style.zIndex = '10003';
+      };
+      
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        updatePosition();
+        // Also update after a small delay to account for text rendering
+        setTimeout(updatePosition, 0);
+      });
+    }
+  }, [showTooltip]);
   
   return (
     <AppBar 
@@ -257,10 +289,17 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
         </div>
   
         {/* Information icon and Time display */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
-          <Tooltip text="Full Screen for Better Experience" enterDelay={100} leaveDelay={500}>
+        <div className="appbar-time-container" style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, position: 'relative' }}>
+          <div style={{ position: 'relative' }}>
             <button
+              ref={buttonRef}
               onClick={toggleFullscreen}
+              onMouseEnter={() => {
+                setTimeout(() => setShowTooltip(true), 100);
+              }}
+              onMouseLeave={() => {
+                setTimeout(() => setShowTooltip(false), 500);
+              }}
               style={{
                 height: '32px',
                 width: '32px',
@@ -293,7 +332,28 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
                 }} 
               />
             </button>
-          </Tooltip>
+            {showTooltip && (
+              <div
+                ref={tooltipRef}
+                className="custom-tooltip"
+                style={{
+                  position: 'fixed',
+                  background: '#ffffe1',
+                  border: '1px solid #000',
+                  padding: '4px 8px',
+                  fontSize: '11px',
+                  fontFamily: 'MS Sans Serif, sans-serif',
+                  color: '#000',
+                  whiteSpace: 'nowrap',
+                  zIndex: 10003,
+                  pointerEvents: 'none',
+                  boxShadow: '2px 2px 0 rgba(0, 0, 0, 0.3)'
+                }}
+              >
+                Full Screen for Better Experience
+              </div>
+            )}
+          </div>
           
           {/* Time display matching Windows 95 style - recessed/flat appearance */}
           <div className="appbar-time" style={{

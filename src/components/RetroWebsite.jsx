@@ -225,7 +225,7 @@ const RetroWebsite = () => {
           <span className="title-letter">E</span>
           <span className="title-letter">X</span>
         </h1>
-        <div className="retro-subtitle">Web Developer & Freelancer</div>
+        <div className="retro-subtitle">Web Developer</div>
         <div className="blink-text">[ WELCOME TO MY DIGITAL SPACE ]</div>
       </div>
 
@@ -257,7 +257,7 @@ const RetroWebsite = () => {
           </div>
           <div className="section-body">
             <p className="retro-text">
-              Hey there! I'm <span className="highlight-red">Alex</span>, a web developer and freelancer. 
+              Hey there! I'm <span className="highlight-red">Alex</span>, a web developer. 
               I build <span className="highlight-tech">modern web applications</span> using cutting-edge technologies,
               but I still love that classic 90s web aesthetic. This site is built with <span className="highlight-code">React</span> and <span className="highlight-code">Node.js</span>.
             </p>

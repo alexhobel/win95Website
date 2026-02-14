@@ -72,4 +72,10 @@
   color: #ffffff !important;
 }
 
+/* Custom tooltip styling */
+.custom-tooltip {
+  position: fixed;
+  z-index: 10003;
+}
+
 

@@ -1,19 +1,26 @@
-# Retro Style Portfolio Website - Windows 95 Edition
+# Alexander Hobelsberger Website - Windows 95/98 Edition
 
-A nostalgic Windows 95-style portfolio website built with React, featuring an authentic retro desktop experience with a medieval-themed website and interactive applications.
+A nostalgic Windows 95/98-style website by **Alexander Hobelsberger**, built with React, featuring an authentic retro desktop experience with a medieval-themed website and interactive applications. Experience the best of 90s web design with modern functionality.
 
 ## Features
 
 ### 🖥️ Windows 95 Desktop Interface
 - **Authentic Desktop Experience** - Complete Windows 95-style desktop with draggable icons
 - **Window Management** - Open, close, minimize, maximize, and drag windows just like Windows 95
+- **Resizable Windows** - Drag window edges and corners to resize, with proper cursor indicators
 - **Taskbar** - Bottom taskbar showing open windows and system time
-- **Desktop Icons** - Large, pixelated icons for easy access to applications
+- **Start Menu** - Functional Start Menu with Programs submenu, Documents, Settings, and more
+- **Desktop Icons** - Large, pixelated Windows 98-style icons for easy access to applications
+- **Icon Positioning** - Drag and drop desktop icons with positions saved to localStorage
+- **Display Properties** - Customize desktop wallpaper and colors with settings persistence
+- **Fullscreen Toggle** - Information icon in taskbar to toggle fullscreen mode
 
-### 🌐 Internet Explorer Browser
+### 🌐 Internet Browser
 - **Windows 95 IE Styling** - Authentic Internet Explorer interface with menu bar, toolbar, and address bar
-- **Loading Animation** - Classic Windows 95-style segmented progress bar
+- **Progress Bar** - React95 ProgressBar component for loading states
+- **Tabbed Browsing** - Multiple tabs for Personal and Business websites
 - **Medieval-Themed Website** - Custom retro website with Age of Empires-inspired design
+- **Black/White/Grey Theme** - Modern monochrome aesthetic with medieval elements
 - **Sword Cursor** - Custom clipart sword cursor matching the medieval theme
 
 ### 🎶 Music Maker Application
@@ -43,6 +50,24 @@ A nostalgic Windows 95-style portfolio website built with React, featuring an au
 - **Artist Filtering** - Dropdown filter to browse by artist
 - **Collection Value** - Displays estimated collection value
 - **Old-School Styling** - Retro presentation matching the medieval theme
+
+### 🔍 SEO Checker
+- **Website Analysis** - Analyze any website's SEO metrics
+- **Progress Bar** - React95 ProgressBar for loading states during analysis
+- **Comprehensive Reports** - Title tags, meta descriptions, headings, Open Graph tags
+- **SEO Score** - Visual score display with recommendations
+- **Real-time Analysis** - Fast and accurate SEO analysis
+
+### 📧 Contact Form
+- **Windows 95 Style Form** - Authentic form styling with custom focus colors
+- **Custom Focus Styles** - Focus outlines use the color set in Display Properties
+- **Form Validation** - Built-in validation and error handling
+
+### ⚙️ Display Properties
+- **Wallpaper Selection** - Choose from multiple retro wallpapers
+- **Color Customization** - Set custom desktop colors
+- **Settings Persistence** - All settings saved to localStorage
+- **React95 Monitor Component** - Authentic Windows 95 settings interface
 
 ## Getting Started
 
@@ -162,38 +187,81 @@ Edit the `services` array in `src/components/Desktop.jsx` to customize:
 ## Technologies Used
 
 - **React** - UI framework with hooks
-- **Vite** - Build tool and dev server
-- **React95** - Windows 95 UI component library
+- **Vite** - Build tool and dev server with custom API middleware
+- **React95** - Windows 95 UI component library (AppBar, Toolbar, Button, MenuList, ProgressBar, Monitor, etc.)
 - **Web Audio API** - For music synthesis and playback
 - **Express.js** - Backend proxy server for Discogs API
 - **CSS3** - Custom styling with animations and effects
+- **localStorage** - For persisting user settings and icon positions
+- **Fullscreen API** - For fullscreen mode toggle
 
 ## Key Features Explained
 
 ### Window Management
-Windows can be dragged, minimized, maximized, and closed. Each window maintains its own state including position, size, and z-index. Subwindows (like the Mixer) automatically close when their parent window closes.
+Windows can be dragged, minimized, maximized, resized, and closed. Each window maintains its own state including position, size, and z-index. Windows can be resized by dragging edges and corners with appropriate cursor indicators. Subwindows (like the Mixer) automatically close when their parent window closes.
+
+### Display Properties & Customization
+Users can customize their desktop experience through the Display Properties window:
+- Select from multiple retro wallpapers (Zigzag, Triangles, etc.)
+- Choose custom desktop colors
+- All settings persist across sessions via localStorage
+- Custom colors affect focus styles throughout the application
+
+### Start Menu
+The Start Menu provides access to all applications:
+- Programs submenu with hover highlighting
+- Documents folder access
+- Settings (Display Properties)
+- All menu items use consistent Windows 98-style icons
 
 ### Music Maker
-The Music Maker uses Web Audio API for real-time audio synthesis. All changes (patterns, BPM, volume) apply instantly without interrupting playback. The mixer opens in a separate subwindow for independent volume control.
+The Music Maker uses Web Audio API for real-time audio synthesis. All changes (patterns, BPM, volume) apply instantly without interrupting playback. The mixer opens in a separate subwindow for independent volume control. Uses authentic Windows 95-style icons (midi_bl.ico, mixer_sound.ico).
+
+### SEO Checker
+Built-in SEO analysis tool that:
+- Analyzes any website's SEO metrics
+- Uses React95 ProgressBar for loading states
+- Provides comprehensive reports with scores and recommendations
+- Runs via Vite middleware (no separate server needed)
 
 ### Discogs Integration
 The vinyl collection feature uses a Node.js proxy server to handle OAuth 1.0a authentication with Discogs API, bypassing CORS restrictions. Collection data is fetched and displayed with search and filtering capabilities.
 
 ### Medieval Theme
-The website features a retro medieval computer game aesthetic inspired by Age of Empires, with pixelated clipart elements, custom cursors, and animated backgrounds.
+The website features a retro medieval computer game aesthetic with black/white/grey color scheme, pixelated clipart elements, custom cursors, and authentic retro styling.
+
+## SEO Optimization
+
+This website is fully optimized for search engines with:
+- **Comprehensive Meta Tags** - Title, description, keywords optimized for "retro website", "90s style website", and "Alexander Hobelsberger"
+- **Open Graph Tags** - Full social media sharing support
+- **Structured Data (JSON-LD)** - Person, WebSite, and CreativeWork schemas
+- **Semantic HTML** - Proper heading structure and semantic elements
+- **Canonical URLs** - Proper URL canonicalization
+- **Mobile Responsive** - Viewport meta tags for mobile optimization
+- **Fast Loading** - Optimized assets and efficient code
 
 ## Browser Compatibility
 
 - Modern browsers with Web Audio API support
 - Chrome, Firefox, Safari, Edge (latest versions)
+- Fullscreen mode support (macOS and Windows)
 - Requires JavaScript enabled
 
 ## License
 
 This project is for personal/portfolio use.
 
+## Author
+
+**Alexander Hobelsberger** - Developer & Music Producer
+
+- Website: https://alexanderhobelsberger.de
+- Specializing in retro web design, 90s style websites, and creative digital projects
+
 ## Credits
 
 - React95 by React95 Team: https://github.com/React95/React95
 - Discogs API: https://www.discogs.com/developers
 - Web Audio API: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
+- Windows 98 Icons: Authentic retro icon collection

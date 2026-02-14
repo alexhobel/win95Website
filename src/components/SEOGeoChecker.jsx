@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { TextInput, Button } from 'react95';
+import { useState, useEffect } from 'react';
+import { TextInput, Button, ProgressBar } from 'react95';
 import './SEOGeoChecker.css';
 
 const SEOGeoChecker = () => {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [analysis, setAnalysis] = useState(null);
   const [error, setError] = useState(null);
 
@@ -69,6 +70,40 @@ const SEOGeoChecker = () => {
     }
   };
 
+  // Simulate loading progress using react95 ProgressBar pattern
+  useEffect(() => {
+    if (!loading) return;
+    
+    let timer;
+    let timeoutId;
+    
+    timer = setInterval(() => {
+      setLoadingProgress(previousPercent => {
+        if (previousPercent >= 100) {
+          // Keep at 100 until loading completes
+          return 100;
+        }
+        const diff = Math.random() * 15 + 5; // 5-20 per interval
+        return Math.min(previousPercent + diff, 100);
+      });
+    }, 100); // 100ms intervals
+    
+    return () => {
+      if (timer) clearInterval(timer);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [loading]);
+
+  // Reset progress when loading starts
+  useEffect(() => {
+    if (loading) {
+      setLoadingProgress(0);
+    } else {
+      // Reset progress when loading completes
+      setLoadingProgress(0);
+    }
+  }, [loading]);
+
   return (
     <div className="seo-checker-container">
       {/* Menu Bar */}
@@ -130,6 +165,18 @@ const SEOGeoChecker = () => {
             </div>
           </div>
         </div>
+
+        {/* Loading Progress Bar */}
+        {loading && (
+          <div className="loading-section" style={{ margin: '20px 0', padding: '20px', background: '#ffffff', border: '2px inset #c0c0c0' }}>
+            <div style={{ marginBottom: '10px', fontSize: '11px', color: '#000', fontFamily: 'MS Sans Serif, sans-serif' }}>
+              Analyzing website...
+            </div>
+            <div style={{ width: '100%', maxWidth: '500px' }}>
+              <ProgressBar value={Math.floor(loadingProgress)} style={{ width: '100%' }} />
+            </div>
+          </div>
+        )}
 
         {/* Error Message */}
         {error && (
