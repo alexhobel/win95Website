@@ -97,6 +97,38 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
     }
   };
 
+  // Check initial fullscreen state and show tooltip if not in fullscreen
+  useEffect(() => {
+    const checkFullscreen = () => {
+      const isFullscreen = !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.msFullscreenElement
+      );
+      if (!isFullscreen) {
+        setShowTooltip(true);
+        // Hide after 3 seconds
+        setTimeout(() => {
+          setShowTooltip(false);
+        }, 3000);
+      }
+    };
+    
+    // Check on mount
+    checkFullscreen();
+    
+    // Listen for fullscreen changes
+    document.addEventListener('fullscreenchange', checkFullscreen);
+    document.addEventListener('webkitfullscreenchange', checkFullscreen);
+    document.addEventListener('msfullscreenchange', checkFullscreen);
+    
+    return () => {
+      document.removeEventListener('fullscreenchange', checkFullscreen);
+      document.removeEventListener('webkitfullscreenchange', checkFullscreen);
+      document.removeEventListener('msfullscreenchange', checkFullscreen);
+    };
+  }, []);
+
   // Position tooltip above button
   useEffect(() => {
     if (showTooltip && buttonRef.current && tooltipRef.current) {
@@ -291,68 +323,72 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
         {/* Information icon and Time display */}
         <div className="appbar-time-container" style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0, position: 'relative' }}>
           <div style={{ position: 'relative' }}>
-            <button
-              ref={buttonRef}
-              onClick={toggleFullscreen}
+            <div
               onMouseEnter={() => {
-                setTimeout(() => setShowTooltip(true), 100);
+                setShowTooltip(true);
               }}
               onMouseLeave={() => {
-                setTimeout(() => setShowTooltip(false), 500);
+                setShowTooltip(false);
               }}
-              style={{
-                height: '32px',
-                width: '32px',
-                padding: '0',
-                background: '#c0c0c0',
-                border: '2px outset #c0c0c0',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                flexShrink: 0
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.border = '2px inset #c0c0c0';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.border = '2px outset #c0c0c0';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.border = '2px outset #c0c0c0';
-              }}
+              style={{ position: 'relative', display: 'inline-block' }}
             >
-              <img 
-                src={infoIcon} 
-                alt="Information" 
-                style={{ 
-                  width: '20px', 
-                  height: '20px', 
-                  imageRendering: 'pixelated' 
-                }} 
-              />
-            </button>
-            {showTooltip && (
-              <div
-                ref={tooltipRef}
-                className="custom-tooltip"
+              <button
+                ref={buttonRef}
+                onClick={toggleFullscreen}
                 style={{
-                  position: 'fixed',
-                  background: '#ffffe1',
-                  border: '1px solid #000',
-                  padding: '4px 8px',
-                  fontSize: '11px',
-                  fontFamily: 'MS Sans Serif, sans-serif',
-                  color: '#000',
-                  whiteSpace: 'nowrap',
-                  zIndex: 10003,
-                  pointerEvents: 'none',
-                  boxShadow: '2px 2px 0 rgba(0, 0, 0, 0.3)'
+                  height: '32px',
+                  width: '32px',
+                  padding: '0',
+                  background: '#c0c0c0',
+                  border: '2px outset #c0c0c0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.border = '2px inset #c0c0c0';
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.border = '2px outset #c0c0c0';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.border = '2px outset #c0c0c0';
                 }}
               >
-                Full Screen for Better Experience
-              </div>
-            )}
+                <img 
+                  src={infoIcon} 
+                  alt="Information" 
+                  style={{ 
+                    width: '20px', 
+                    height: '20px', 
+                    imageRendering: 'pixelated' 
+                  }} 
+                />
+              </button>
+              {showTooltip && (
+                <div
+                  ref={tooltipRef}
+                  className="custom-tooltip"
+                  style={{
+                    position: 'fixed',
+                    background: '#ffffe1',
+                    border: '1px solid #000',
+                    padding: '4px 8px',
+                    fontSize: '11px',
+                    fontFamily: 'MS Sans Serif, sans-serif',
+                    color: '#000',
+                    whiteSpace: 'nowrap',
+                    zIndex: 10003,
+                    pointerEvents: 'none',
+                    boxShadow: '2px 2px 0 rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  Full Screen for Better Experience
+                </div>
+              )}
+            </div>
           </div>
           
           {/* Time display matching Windows 95 style - recessed/flat appearance */}

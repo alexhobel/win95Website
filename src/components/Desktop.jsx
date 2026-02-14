@@ -3,7 +3,7 @@ import DesktopIcon from './DesktopIcon';
 import Window from './Window';
 import Taskbar from './Taskbar';
 import AppBarComponent from './AppBar';
-import cvPdf from '../assets/CV .pdf';
+import testPdf from '../assets/TestPDF.pdf';
 import browserIcon from '../assets/windows98-icons/ico/internet_connection_wiz.ico';
 import folderIcon from '../assets/windows98-icons/ico/directory_closed_cool.ico';
 import mailIcon from '../assets/windows98-icons/ico/mailbox_world.ico';
@@ -79,11 +79,11 @@ const Desktop = () => {
         isFolder: true,
         files: [
           {
-            id: 'cv',
-            name: 'CV.pdf',
+            id: 'testpdf',
+            name: 'TestPDF.pdf',
             icon: '📄',
             isPDF: true,
-            pdfPath: cvPdf
+            pdfPath: testPdf
           }
         ],
         onFileOpen: () => {
