@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { AppBar, Toolbar, Button, MenuList, MenuListItem, Separator } from 'react95';
+import { AppBar, Toolbar, Button, MenuList, MenuListItem, Separator, Tooltip } from 'react95';
 import browserIcon from '../assets/windows98-icons/ico/internet_connection_wiz.ico';
 import folderIcon from '../assets/windows98-icons/ico/directory_closed_cool.ico';
 import mailIcon from '../assets/windows98-icons/ico/mailbox_world.ico';
 import musicMakerIcon from '../assets/windows98-icons/ico/loudspeaker_wave.ico';
 import seoCheckerIcon from '../assets/windows98-icons/ico/magnifying_glass.ico';
 import settingsIcon from '../assets/windows98-icons/ico/settings_gear.ico';
+import infoIcon from '../assets/windows98-icons/ico/msg_information.ico';
 import './AppBar.css';
 
 // Windows 95-style logo with 4 colored panes (red, green, blue, yellow)
@@ -61,6 +62,36 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
     }
     setOpen(false);
     setProgramsOpen(false);
+  };
+
+  const toggleFullscreen = () => {
+    // Check if fullscreen is supported and not on mobile
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return;
+
+    if (!document.fullscreenElement) {
+      // Enter fullscreen
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        // Safari
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        // IE/Edge
+        document.documentElement.msRequestFullscreen();
+      }
+    } else {
+      // Exit fullscreen
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        // Safari
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        // IE/Edge
+        document.msExitFullscreen();
+      }
+    }
   };
   
   return (
@@ -225,22 +256,62 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
           </div>
         </div>
   
-        {/* Time display matching Windows 95 style - recessed/flat appearance */}
-        <div className="appbar-time" style={{
-          height: '32px',
-          padding: '0 8px',
-          background: '#c0c0c0',
-          border: '2px inset #c0c0c0',
-          display: 'flex',
-          alignItems: 'center',
-          fontSize: '11px',
-          color: '#000',
-          fontWeight: 'normal',
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-          fontFamily: 'MS Sans Serif, sans-serif'
-        }}>
-          {formattedTime}
+        {/* Information icon and Time display */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+          <Tooltip text="Full Screen for Better Experience" enterDelay={100} leaveDelay={500}>
+            <button
+              onClick={toggleFullscreen}
+              style={{
+                height: '32px',
+                width: '32px',
+                padding: '0',
+                background: '#c0c0c0',
+                border: '2px outset #c0c0c0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                flexShrink: 0
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.border = '2px inset #c0c0c0';
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.border = '2px outset #c0c0c0';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.border = '2px outset #c0c0c0';
+              }}
+            >
+              <img 
+                src={infoIcon} 
+                alt="Information" 
+                style={{ 
+                  width: '20px', 
+                  height: '20px', 
+                  imageRendering: 'pixelated' 
+                }} 
+              />
+            </button>
+          </Tooltip>
+          
+          {/* Time display matching Windows 95 style - recessed/flat appearance */}
+          <div className="appbar-time" style={{
+            height: '32px',
+            padding: '0 8px',
+            background: '#c0c0c0',
+            border: '2px inset #c0c0c0',
+            display: 'flex',
+            alignItems: 'center',
+            fontSize: '11px',
+            color: '#000',
+            fontWeight: 'normal',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            fontFamily: 'MS Sans Serif, sans-serif'
+          }}>
+            {formattedTime}
+          </div>
         </div>
       </Toolbar>
     </AppBar>

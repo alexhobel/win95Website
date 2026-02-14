@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { Toolbar, Button, Frame } from 'react95';
+import { useState, useEffect } from 'react';
+import { Toolbar, Button, Frame, ProgressBar } from 'react95';
 import PersonalWebsite from './PersonalWebsite';
 import BusinessWebsite from './BusinessWebsite';
 import browserIcon from '../assets/BrowserIcon.webp';
@@ -10,7 +10,6 @@ const BrowserViewer = ({ onUrlChange }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [url, setUrl] = useState('http://alexanderhobelsberger.de/personal');
-  const loadingIntervalRef = useRef(null);
 
   // Notify parent of URL changes
   useEffect(() => {
@@ -19,46 +18,33 @@ const BrowserViewer = ({ onUrlChange }) => {
     }
   }, [url, onUrlChange]);
 
-  // Simulate loading state
+  // Simulate loading state using react95 ProgressBar pattern
   useEffect(() => {
-    if (isLoading) {
-      let progress = 0;
-      
-      // Reset progress in next tick to avoid synchronous setState
-      setTimeout(() => {
-        setLoadingProgress(0);
-      }, 0);
-      
-      loadingIntervalRef.current = setInterval(() => {
-        progress += Math.random() * 20 + 12; // Moderate progress: 12-32 per interval
-        if (progress >= 100) {
-          progress = 100;
-          if (loadingIntervalRef.current) {
-            clearInterval(loadingIntervalRef.current);
-            loadingIntervalRef.current = null;
-          }
-          setLoadingProgress(100);
+    if (!isLoading) return;
+    
+    const timer = setInterval(() => {
+      setLoadingProgress(previousPercent => {
+        if (previousPercent === 100) {
+          // When reaching 100%, wait a bit before hiding loading
           setTimeout(() => {
             setIsLoading(false);
-          }, 200); // Moderate delay before showing content
-        } else {
-          setLoadingProgress(progress);
+          }, 200);
+          return 0;
         }
-      }, 80); // Moderate interval: 80ms
-
-      return () => {
-        if (loadingIntervalRef.current) {
-          clearInterval(loadingIntervalRef.current);
-          loadingIntervalRef.current = null;
-        }
-      };
-    }
+        const diff = Math.random() * 10;
+        return Math.min(previousPercent + diff, 100);
+      });
+    }, 500);
+    
+    return () => {
+      clearInterval(timer);
+    };
   }, [isLoading]);
 
 
   const handleRefresh = () => {
-    setIsLoading(true);
     setLoadingProgress(0);
+    setIsLoading(true);
   };
 
   return (
@@ -147,14 +133,8 @@ const BrowserViewer = ({ onUrlChange }) => {
                 <img src={browserIcon} alt="Internet Explorer" className="ie-browser-icon" />
               </div>
               <div className="ie-loading-text">Opening page...</div>
-              <div className="ie-progress-container">
-                <div className="ie-progress-bar" style={{ width: `${loadingProgress}%` }}>
-                  <div className="ie-progress-segments">
-                    {Array.from({ length: 20 }, (_, i) => (
-                      <div key={i} className="ie-progress-segment"></div>
-                    ))}
-                  </div>
-                </div>
+              <div className="ie-progress-container" style={{ width: '100%', maxWidth: '400px', margin: '20px auto' }}>
+                <ProgressBar value={Math.floor(loadingProgress)} />
               </div>
               <div className="ie-status-text">
                 {loadingProgress < 100 ? `Loading ${Math.round(loadingProgress)}%...` : 'Done'}

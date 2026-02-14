@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import mixerIcon from '../assets/windows98-icons/ico/mixer_sound.ico';
+import midiIcon from '../assets/windows98-icons/ico/midi_bl.ico';
 import './MusicMaker.css';
 
 const MusicMaker = ({ drumVolume: propDrumVolume, synthVolume: propSynthVolume, onOpenMixer }) => {
@@ -257,7 +258,11 @@ const MusicMaker = ({ drumVolume: propDrumVolume, synthVolume: propSynthVolume, 
   return (
     <div className="music-maker-container">
       <div className="music-maker-header">
-        <h2 className="music-maker-title">🎵 Music Maker 🎵</h2>
+        <h2 className="music-maker-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+          <img src={midiIcon} alt="MIDI" style={{ width: '24px', height: '24px', imageRendering: 'pixelated' }} />
+          Music Maker
+          <img src={midiIcon} alt="MIDI" style={{ width: '24px', height: '24px', imageRendering: 'pixelated' }} />
+        </h2>
         <div className="music-maker-controls">
           <button 
             className={`play-button ${isPlaying ? 'playing' : ''}`}
