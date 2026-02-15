@@ -286,11 +286,11 @@ const RecordCollectionView = ({ onBack }) => {
       {!loading && sortedArtists.length > 0 && (
         <div className="cta-section">
           <p className="cta-text">
-            If you want to talk about records, collecting by yourself or want to trade, 
-            <button className="cta-link" onClick={handleOpenContact}>
-              text me
-            </button>
+            If you want to talk about records, collecting by yourself or want to trade
           </p>
+          <button className="cta-link" onClick={handleOpenContact}>
+            text me
+          </button>
         </div>
       )}
 

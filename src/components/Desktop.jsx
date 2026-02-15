@@ -18,7 +18,6 @@ const Desktop = () => {
   const zIndexCounterRef = useRef(100);
   const windowIdCounter = useRef(0);
   const musicMakerWindowIdsRef = useRef(new Map()); // Map service.id -> window.id
-  const browserInitializedRef = useRef(false); // Track if browser has been auto-opened
   // Load saved settings from localStorage on mount
   const loadDesktopSettings = () => {
     if (typeof window !== 'undefined') {
@@ -240,10 +239,15 @@ const Desktop = () => {
       const viewportHeight = window.innerHeight - 40; // Account for taskbar
       // On mobile, center windows and make them full width
       const isMobile = viewportWidth <= 768;
+      
+      // Browser should always open maximized
+      const isBrowser = service.content.isBrowser;
+      const shouldMaximize = isBrowser;
+      
       const constrainedX = isMobile ? 0 : Math.max(0, Math.min(initialX, viewportWidth - windowWidth));
       const constrainedY = isMobile ? 0 : Math.max(0, Math.min(initialY, viewportHeight - windowHeight));
-      const finalWidth = isMobile ? viewportWidth : windowWidth;
-      const finalHeight = isMobile ? Math.min(windowHeight, viewportHeight) : windowHeight;
+      const finalWidth = shouldMaximize ? viewportWidth : (isMobile ? viewportWidth : windowWidth);
+      const finalHeight = shouldMaximize ? viewportHeight : (isMobile ? Math.min(windowHeight, viewportHeight) : windowHeight);
       
       const musicMakerWindowId = `${service.id}-${windowIdCounter.current}`;
       
@@ -360,17 +364,17 @@ const Desktop = () => {
         serviceId: service.id,
         title: service.content.title,
         content: folderContent,
-        x: constrainedX,
-        y: constrainedY,
+        x: shouldMaximize ? 0 : constrainedX,
+        y: shouldMaximize ? 0 : constrainedY,
         zIndex: zIndexCounter,
         minimized: false,
-        maximized: false,
+        maximized: shouldMaximize,
         width: finalWidth,
         height: finalHeight,
         originalX: constrainedX,
         originalY: constrainedY,
-        originalWidth: finalWidth,
-        originalHeight: finalHeight
+        originalWidth: windowWidth,
+        originalHeight: windowHeight
       };
       setOpenWindows([...openWindows, newWindow]);
       setZIndexCounter(zIndexCounter + 1);
@@ -395,40 +399,6 @@ const Desktop = () => {
     setZIndexCounter(zIndexCounter + 1);
   };
 
-  // Open browser window automatically on mount in full screen
-  useEffect(() => {
-    if (browserInitializedRef.current) return; // Only run once
-    
-    const browserService = services.find(s => s.id === 'browser');
-    if (browserService) {
-      browserInitializedRef.current = true;
-      // Open browser window maximized
-      windowIdCounter.current += 1;
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight - 40; // Account for taskbar
-      const windowWidth = browserService.content.isBrowser ? 900 : 500;
-      const windowHeight = browserService.content.isBrowser ? 700 : 400;
-      
-      setOpenWindows([{
-        id: `browser-${windowIdCounter.current}`,
-        serviceId: browserService.id,
-        title: browserService.content.title,
-        content: browserService.content,
-        x: 0,
-        y: 0,
-        zIndex: zIndexCounter,
-        minimized: false,
-        maximized: true, // Start maximized
-        width: viewportWidth,
-        height: viewportHeight,
-        originalX: 100,
-        originalY: 100,
-        originalWidth: windowWidth,
-        originalHeight: windowHeight
-      }]);
-      setZIndexCounter(prev => prev + 1);
-    }
-  }, [services, zIndexCounter]); // Include zIndexCounter for the setter
 
   // Listen for custom event to open contact form
   useEffect(() => {
