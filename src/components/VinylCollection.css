@@ -4,7 +4,7 @@
   background: #1a1a0a;
   min-height: 100%;
   font-family: 'Courier New', 'MS Sans Serif', monospace;
-  cursor: url('/sword-cursor.svg') 16 2, auto;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, auto;
 }
 
 .vinyl-header {
@@ -98,7 +98,7 @@
   font-family: 'Courier New', monospace;
   font-size: 14px;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
-  cursor: url('/sword-cursor.svg') 16 2, text;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, text;
 }
 
 .vinyl-search-input::placeholder {
@@ -126,7 +126,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: url('/sword-cursor.svg') 16 2, pointer;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, pointer;
   font-size: 14px;
   font-weight: bold;
   font-family: 'MS Sans Serif', monospace;
@@ -366,7 +366,7 @@
   font-size: 14px;
   font-weight: bold;
   font-family: 'MS Sans Serif', 'Courier New', monospace;
-  cursor: url('/sword-cursor.svg') 16 2, pointer;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, pointer;
   text-transform: uppercase;
   transition: all 0.2s;
   text-shadow: 1px 1px 2px #000;

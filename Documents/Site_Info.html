@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Style Website - Technical Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier Prime', 'Courier New', monospace;
+            background: #000;
+            color: #00ff00;
+            padding: 40px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 20px;
+            }
+            .header, .section {
+                border-color: #000;
+            }
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #000;
+            border: 3px solid #00ff00;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        .header {
+            border-bottom: 3px solid #00ff00;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            color: #ffff00;
+            margin-top: 10px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            border-left: 3px solid #00ff00;
+            padding-left: 20px;
+        }
+        
+        .section h2 {
+            font-size: 20px;
+            text-transform: uppercase;
+            color: #ffff00;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #00ff00;
+            padding-bottom: 5px;
+        }
+        
+        .section p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .tech-list li {
+            padding: 8px 0;
+            border-bottom: 1px dotted #00ff00;
+        }
+        
+        .tech-list li:before {
+            content: "> ";
+            color: #ffff00;
+            font-weight: bold;
+        }
+        
+        .feature-box {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #00ff00;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px dashed #00ff00;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .ascii-art {
+            font-family: monospace;
+            font-size: 10px;
+            line-height: 1.2;
+            color: #00ff00;
+            text-align: center;
+            margin: 20px 0;
+            white-space: pre;
+        }
+        
+        .highlight {
+            color: #ffff00;
+            font-weight: bold;
+        }
+        
+        @page {
+            margin: 2cm;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Retro Style Website</h1>
+            <div class="subtitle">Welcome to my website</div>
+            <div class="subtitle">My Name is Alex and I want to give you a retro Computing experience</div>
+
+        </div>
+        
+        <div class="section">
+            <h2>Project Description</h2>
+            <p>
+                This website is a nostalgic journey back to the 1990s, recreating the authentic 
+                Windows 95/98 desktop experience in a modern web browser. The project combines 
+                retro aesthetics with contemporary web technologies to deliver an immersive 
+                desktop environment that feels like stepping into a time machine.
+            </p>
+            <p>
+                The site features a complete Windows 95-style desktop interface with draggable 
+                windows, a functional taskbar, desktop icons, and a Start Menu. Users can 
+                interact with various applications including a web browser, music maker, 
+                document viewer, and more - all styled to match the classic Windows 95 look 
+                and feel.
+            </p>
+        </div>
+        
+        <div class="section">
+            <h2>Technology Stack</h2>
+            <p>The project is built using modern web technologies:</p>
+            <ul class="tech-list">
+                <li><strong>React</strong> - Modern JavaScript library for building user interfaces</li>
+                <li><strong>Vite</strong> - Fast build tool and development server</li>
+                <li><strong>React95</strong> - Windows 95 UI component library</li>
+                <li><strong>Express.js</strong> - Backend server for API proxying</li>
+                <li><strong>Discogs API</strong> - Integration for vinyl collection data</li>
+                <li><strong>CSS3</strong> - Custom styling with animations and retro effects</li>
+                <li><strong>HTML5</strong> - Modern markup with semantic structure</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Key Features</h2>
+            
+            <div class="feature-box">
+                <strong>Windows 95 Desktop Interface</strong><br>
+                Complete desktop environment with draggable windows, taskbar, Start Menu, 
+                and desktop icons. All interactions mimic the classic Windows 95 experience.
+            </div>
+            
+            <div class="feature-box">
+                <strong>Web Browser Application</strong><br>
+                Custom browser interface styled like Internet Explorer, featuring tabbed 
+                browsing and integration with websites you can browse.
+            </div>
+            
+            <div class="feature-box">
+                <strong>Music Maker</strong><br>
+                Interactive music creation tool with drum sequencer and synthesizer, 
+                complete with mixer controls and BPM adjustment.
+            </div>
+            
+            <div class="feature-box">
+                <strong>SEO Checker Tool</strong><br>
+                Website analysis tool that examines SEO metrics, meta tags, and provides 
+                comprehensive reports on any given URL.
+            </div>
+            
+            <div class="feature-box">
+                <strong>Document Viewer</strong><br>
+                Built-in PDF viewer for displaying documents and CV within the Windows 95 
+                interface.
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        document.getElementById('date').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>
+

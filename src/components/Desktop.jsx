@@ -3,7 +3,7 @@ import DesktopIcon from './DesktopIcon';
 import Window from './Window';
 import Taskbar from './Taskbar';
 import AppBarComponent from './AppBar';
-import testPdf from '../assets/TestPDF.pdf';
+import siteInfoPdf from '../assets/Site Information.pdf';
 import browserIcon from '../assets/windows98-icons/ico/internet_connection_wiz.ico';
 import folderIcon from '../assets/windows98-icons/ico/directory_closed_cool.ico';
 import mailIcon from '../assets/windows98-icons/ico/mailbox_world.ico';
@@ -70,20 +70,20 @@ const Desktop = () => {
   const services = useMemo(() => [
     {
       id: 'personal-documents',
-      title: 'Personal Documents',
+      title: 'Documents',
       icon: folderIcon,
       iconType: 'image',
       content: {
-        title: 'Personal Documents',
+        title: 'Documents',
         description: 'My Documents',
         isFolder: true,
         files: [
           {
-            id: 'testpdf',
-            name: 'TestPDF.pdf',
+            id: 'site-info',
+            name: 'Site Information.pdf',
             icon: '📄',
             isPDF: true,
-            pdfPath: testPdf
+            pdfPath: siteInfoPdf
           }
         ],
         onFileOpen: () => {
@@ -393,6 +393,31 @@ const Desktop = () => {
     ));
     setZIndexCounter(zIndexCounter + 1);
   };
+
+  // Listen for custom event to open contact form
+  useEffect(() => {
+    const handleOpenContact = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const contactService = services.find(s => s.id === 'contact');
+      if (contactService) {
+        // Find if contact window is already open
+        const existingWindow = openWindows.find(w => w.content.isContactForm);
+        if (existingWindow) {
+          // Bring existing window to front
+          bringToFront(existingWindow.id);
+        } else {
+          // Open new contact window
+          openWindow(contactService);
+        }
+      }
+    };
+
+    window.addEventListener('openContactForm', handleOpenContact, true);
+    return () => {
+      window.removeEventListener('openContactForm', handleOpenContact, true);
+    };
+  }, [services, openWindows]);
 
   const updateWindowPosition = (windowId, x, y) => {
     setOpenWindows(openWindows.map(w => {

@@ -16,13 +16,13 @@
   color: #d4af37;
   position: relative;
   overflow: visible;
-  cursor: url('/sword-cursor.svg') 16 2, auto;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, auto;
   width: 100%;
   box-sizing: border-box;
 }
 
 .retro-website * {
-  cursor: url('/sword-cursor.svg') 16 2, auto;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, auto;
 }
 
 .retro-website.loaded {
@@ -548,7 +548,7 @@
   font-size: 14px;
   font-weight: bold;
   font-family: 'MS Sans Serif', 'Courier New', monospace;
-  cursor: url('/sword-cursor.svg') 16 2, pointer;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, pointer;
   text-transform: uppercase;
   display: flex;
   align-items: center;

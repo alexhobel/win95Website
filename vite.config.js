@@ -127,7 +127,52 @@ function seoCheckPlugin() {
   };
 }
 
+// Vite plugin to proxy Discogs API routes in development
+function discogsProxyPlugin() {
+  return {
+    name: 'discogs-proxy-api',
+    configureServer(server) {
+      server.middlewares.use('/api/discogs', async (req, res, next) => {
+        // Only handle GET requests for release endpoint
+        if (req.method === 'GET' && req.url?.startsWith('/release')) {
+          try {
+            const url = new URL(req.url, 'http://localhost');
+            const releaseId = url.searchParams.get('id');
+            
+            if (!releaseId) {
+              res.setHeader('Content-Type', 'application/json');
+              res.setHeader('Access-Control-Allow-Origin', '*');
+              res.statusCode = 400;
+              res.end(JSON.stringify({ error: 'Release ID is required' }));
+              return;
+            }
+
+            // Proxy to the Express server
+            const proxyUrl = `http://localhost:3001/api/discogs/release?id=${releaseId}`;
+            const proxyResponse = await fetch(proxyUrl);
+            const data = await proxyResponse.text();
+            
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.statusCode = proxyResponse.status;
+            res.end(data);
+          } catch (error) {
+            console.error('Discogs proxy error:', error);
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.statusCode = 500;
+            res.end(JSON.stringify({ error: error.message }));
+          }
+        } else {
+          // For other routes, pass through
+          next();
+        }
+      });
+    },
+  };
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), seoCheckPlugin()],
+  plugins: [react(), seoCheckPlugin(), discogsProxyPlugin()],
 })

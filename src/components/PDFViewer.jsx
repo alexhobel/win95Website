@@ -4,7 +4,7 @@ const PDFViewer = ({ pdfPath }) => {
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = pdfPath;
-    link.download = 'TestPDF.pdf';
+    link.download = 'Site Information.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

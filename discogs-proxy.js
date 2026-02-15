@@ -16,6 +16,48 @@ const DISCOGS_API_URL = 'https://api.discogs.com';
 app.use(cors());
 app.use(express.json());
 
+// Proxy endpoint for Discogs release details
+app.get('/api/discogs/release', async (req, res) => {
+  try {
+    const releaseId = req.query.id;
+    
+    if (!releaseId) {
+      res.status(400).json({ error: 'Release ID is required' });
+      return;
+    }
+    
+    console.log('Proxy: Fetching Discogs release:', releaseId);
+    
+    // Build Discogs API URL for release details
+    // According to Discogs API docs: GET /releases/{release_id}
+    const url = `${DISCOGS_API_URL}/releases/${releaseId}?key=${CONSUMER_KEY}&secret=${CONSUMER_SECRET}`;
+    
+    console.log('Proxy: Discogs API URL:', url);
+    
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'RetroWebsite/1.0',
+        'Accept': 'application/json',
+      }
+    });
+
+    console.log('Proxy: Discogs API Response Status:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Proxy: Discogs API Error:', response.status, errorText);
+      throw new Error(`Discogs API error: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    console.log('Proxy: Discogs API Success - Release data received');
+    res.json(data);
+  } catch (error) {
+    console.error('Discogs release proxy error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Proxy endpoint for Discogs collection
 app.get('/api/discogs/collection', async (req, res) => {
   try {

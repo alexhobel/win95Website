@@ -22,7 +22,7 @@ const FolderViewer = ({ files = [], onFileOpen }) => {
       <div className="folder-toolbar">
         <div className="folder-address-bar">
           <span className="folder-label">Adresse:</span>
-          <span className="folder-path">C:\Personal Documents</span>
+          <span className="folder-path">C:\Documents</span>
         </div>
       </div>
       <div className="folder-content">
