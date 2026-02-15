@@ -1,6 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Monitor } from 'react95';
 import './DisplayProperties.css';
+// Import GIF wallpapers
+import castleGif from '../assets/Gifs/Castle.gif';
+import castleOfDoomGif from '../assets/Gifs/castleofdoom.gif';
+import crossGif from '../assets/Gifs/Cross.gif';
+import dragonGif from '../assets/Gifs/Dragon.gif';
+import dragon2Gif from '../assets/Gifs/Dragon2.gif';
+import fackelGif from '../assets/Gifs/Fackel.gif';
+import fireandFlameGif from '../assets/Gifs/FireandFlame.gif';
+import hexeGif from '../assets/Gifs/Hexe.gif';
+import lightningGif from '../assets/Gifs/Lightning.gif';
+import lightning2Gif from '../assets/Gifs/lightning2.gif';
+import chainGif from '../assets/Gifs/linkschainam.gif';
+import magicianGif from '../assets/Gifs/Magician.gif';
+import pentagramGif from '../assets/Gifs/Pentagram.gif';
+import pumpkinGif from '../assets/Gifs/Pumpkin.gif';
+import skeletonGif from '../assets/Gifs/skelette_009.gif';
+import skellettonGif from '../assets/Gifs/Skelletton.gif';
 
 const DisplayProperties = ({ onWallpaperChange, onColorChange }) => {
   // Load saved settings from localStorage
@@ -31,6 +48,22 @@ const DisplayProperties = ({ onWallpaperChange, onColorChange }) => {
     { value: 'honey', label: 'Honey' },
     { value: 'water', label: 'Water' },
     { value: 'noise', label: 'Noise' },
+    { value: 'castle', label: 'Castle', gif: castleGif },
+    { value: 'castle-of-doom', label: 'Castle of Doom', gif: castleOfDoomGif },
+    { value: 'cross', label: 'Cross', gif: crossGif },
+    { value: 'dragon', label: 'Dragon', gif: dragonGif },
+    { value: 'dragon2', label: 'Dragon 2', gif: dragon2Gif },
+    { value: 'fackel', label: 'Fackel', gif: fackelGif },
+    { value: 'fire-and-flame', label: 'Fire and Flame', gif: fireandFlameGif },
+    { value: 'hexe', label: 'Hexe', gif: hexeGif },
+    { value: 'lightning', label: 'Lightning', gif: lightningGif },
+    { value: 'lightning2', label: 'Lightning 2', gif: lightning2Gif },
+    { value: 'chain', label: 'Chain', gif: chainGif },
+    { value: 'magician', label: 'Magician', gif: magicianGif },
+    { value: 'pentagram', label: 'Pentagram', gif: pentagramGif },
+    { value: 'pumpkin', label: 'Pumpkin', gif: pumpkinGif },
+    { value: 'skeleton', label: 'Skeleton', gif: skeletonGif },
+    { value: 'skelletton', label: 'Skelletton', gif: skellettonGif },
   ];
 
   const handleWallpaperChange = (value) => {
@@ -52,6 +85,17 @@ const DisplayProperties = ({ onWallpaperChange, onColorChange }) => {
   const getBackgroundStyles = () => {
     if (selectedWallpaper === 'custom') {
       return { background: customColor };
+    }
+    
+    // Check if it's a GIF wallpaper
+    const selectedWallpaperData = wallpapers.find(wp => wp.value === selectedWallpaper);
+    if (selectedWallpaperData && selectedWallpaperData.gif) {
+      return {
+        backgroundImage: `url(${selectedWallpaperData.gif})`,
+        backgroundRepeat: 'repeat',
+        backgroundSize: 'auto',
+        backgroundColor: '#000'
+      };
     }
     
     const patterns = {

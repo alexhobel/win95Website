@@ -82,6 +82,119 @@
   /* Custom color is applied via inline style */
 }
 
+/* GIF Wallpapers - Tiled backgrounds */
+.desktop.wallpaper-castle {
+  background-image: url('../assets/Gifs/Castle.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-castle-of-doom {
+  background-image: url('../assets/Gifs/castleofdoom.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-cross {
+  background-image: url('../assets/Gifs/Cross.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-dragon {
+  background-image: url('../assets/Gifs/Dragon.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-dragon2 {
+  background-image: url('../assets/Gifs/Dragon2.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-fackel {
+  background-image: url('../assets/Gifs/Fackel.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-fire-and-flame {
+  background-image: url('../assets/Gifs/FireandFlame.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-hexe {
+  background-image: url('../assets/Gifs/Hexe.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-lightning {
+  background-image: url('../assets/Gifs/Lightning.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-lightning2 {
+  background-image: url('../assets/Gifs/lightning2.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-chain {
+  background-image: url('../assets/Gifs/linkschainam.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-magician {
+  background-image: url('../assets/Gifs/Magician.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-pentagram {
+  background-image: url('../assets/Gifs/Pentagram.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-pumpkin {
+  background-image: url('../assets/Gifs/Pumpkin.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-skeleton {
+  background-image: url('../assets/Gifs/skelette_009.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
+.desktop.wallpaper-skelletton {
+  background-image: url('../assets/Gifs/Skelletton.gif') !important;
+  background-repeat: repeat !important;
+  background-size: auto !important;
+  background-color: #000 !important;
+}
+
 .desktop-background {
   width: 100%;
   height: calc(100% - 40px);

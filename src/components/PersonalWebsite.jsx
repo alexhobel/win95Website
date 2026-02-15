@@ -1,12 +1,28 @@
 import { useState, useEffect } from 'react';
 import RecordCollectionView from './RecordCollectionView';
 import bandPicture from '../assets/WebsiteMedia/Bandpicture.jpeg';
+import lightningGif from '../assets/Gifs/Lightning.gif';
+import lightning2Gif from '../assets/Gifs/lightning2.gif';
+import chainGif from '../assets/Gifs/linkschainam.gif';
+import castleGif from '../assets/Gifs/Castle.gif';
+import hexeGif from '../assets/Gifs/Hexe.gif';
+import dragonGif from '../assets/Gifs/Dragon.gif';
+import magicianGif from '../assets/Gifs/Magician.gif';
+import fireandFlameGif from '../assets/Gifs/FireandFlame.gif';
 import './RetroWebsite.css';
 
 const PersonalWebsite = () => {
   const [visitorCount, setVisitorCount] = useState(1337);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showRecordCollection, setShowRecordCollection] = useState(false);
+  const [activeSection, setActiveSection] = useState('about');
+
+  const handleOpenContact = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const event = new CustomEvent('openContactForm', { bubbles: true });
+    window.dispatchEvent(event);
+  };
 
   useEffect(() => {
     // Defer setState to avoid synchronous state update
@@ -30,224 +46,204 @@ const PersonalWebsite = () => {
   }
 
   return (
-    <div className={`retro-website ${isLoaded ? 'loaded' : ''}`}>
-      {/* Animated Background */}
-      <div className="retro-bg-pattern"></div>
-      
-      {/* Medieval Decorative Elements */}
-      <div className="medieval-decorations">
-        <div className="castle-left">
-          <svg width="80" height="100" viewBox="0 0 80 100" className="castle-svg" style={{imageRendering: 'pixelated'}}>
-            {/* Castle base - pixelated blocks */}
-            <rect x="8" y="70" width="64" height="30" fill="#5a4a3a" stroke="#3a2a1a" strokeWidth="1"/>
-            <rect x="8" y="70" width="16" height="30" fill="#4a3a2a"/>
-            <rect x="24" y="70" width="16" height="30" fill="#5a4a3a"/>
-            <rect x="40" y="70" width="16" height="30" fill="#4a3a2a"/>
-            <rect x="56" y="70" width="16" height="30" fill="#5a4a3a"/>
-            {/* Left tower - blocky */}
-            <rect x="8" y="40" width="16" height="30" fill="#8b7355" stroke="#5a4a3a" strokeWidth="1"/>
-            <rect x="8" y="40" width="8" height="15" fill="#7b6345"/>
-            <rect x="16" y="40" width="8" height="15" fill="#8b7355"/>
-            {/* Left tower roof - pixelated triangle */}
-            <polygon points="8,40 12,32 16,32 20,32 24,40" fill="#6b5335" stroke="#5a4a3a" strokeWidth="1"/>
-            <rect x="12" y="32" width="4" height="4" fill="#5a4a3a"/>
-            {/* Right tower */}
-            <rect x="56" y="40" width="16" height="30" fill="#8b7355" stroke="#5a4a3a" strokeWidth="1"/>
-            <rect x="56" y="40" width="8" height="15" fill="#7b6345"/>
-            <rect x="64" y="40" width="8" height="15" fill="#8b7355"/>
-            <polygon points="56,40 60,32 64,32 68,32 72,40" fill="#6b5335" stroke="#5a4a3a" strokeWidth="1"/>
-            <rect x="60" y="32" width="4" height="4" fill="#5a4a3a"/>
-            {/* Center gate */}
-            <rect x="32" y="60" width="16" height="10" fill="#3a2a1a" stroke="#2a1a0a" strokeWidth="1"/>
-            <rect x="36" y="60" width="8" height="10" fill="#2a1a0a"/>
-          </svg>
+    <div className={`retro-website gothic-theme ${isLoaded ? 'loaded' : ''}`}>
+      {/* Header with A.L.E.X and Lightning */}
+      <div className="gothic-header">
+        <div className="lightning-group-left">
+          <img src={lightningGif} alt="lightning" className="header-lightning header-lightning-left" />
+          <img src={lightning2Gif} alt="lightning" className="header-lightning header-lightning-left" />
         </div>
-        <div className="castle-right">
-          <svg width="80" height="100" viewBox="0 0 80 100" className="castle-svg" style={{imageRendering: 'pixelated'}}>
-            <rect x="8" y="70" width="64" height="30" fill="#5a4a3a" stroke="#3a2a1a" strokeWidth="1"/>
-            <rect x="8" y="70" width="16" height="30" fill="#4a3a2a"/>
-            <rect x="24" y="70" width="16" height="30" fill="#5a4a3a"/>
-            <rect x="40" y="70" width="16" height="30" fill="#4a3a2a"/>
-            <rect x="56" y="70" width="16" height="30" fill="#5a4a3a"/>
-            <rect x="8" y="40" width="16" height="30" fill="#8b7355" stroke="#5a4a3a" strokeWidth="1"/>
-            <rect x="8" y="40" width="8" height="15" fill="#7b6345"/>
-            <rect x="16" y="40" width="8" height="15" fill="#8b7355"/>
-            <polygon points="8,40 12,32 16,32 20,32 24,40" fill="#6b5335" stroke="#5a4a3a" strokeWidth="1"/>
-            <rect x="12" y="32" width="4" height="4" fill="#5a4a3a"/>
-            <rect x="56" y="40" width="16" height="30" fill="#8b7355" stroke="#5a4a3a" strokeWidth="1"/>
-            <rect x="56" y="40" width="8" height="15" fill="#7b6345"/>
-            <rect x="64" y="40" width="8" height="15" fill="#8b7355"/>
-            <polygon points="56,40 60,32 64,32 68,32 72,40" fill="#6b5335" stroke="#5a4a3a" strokeWidth="1"/>
-            <rect x="60" y="32" width="4" height="4" fill="#5a4a3a"/>
-            <rect x="32" y="60" width="16" height="10" fill="#3a2a1a" stroke="#2a1a0a" strokeWidth="1"/>
-            <rect x="36" y="60" width="8" height="10" fill="#2a1a0a"/>
-          </svg>
+        <div className="header-content">
+          <h1 className="gothic-title">A.L.E.X</h1>
+          <div className="header-subtitle">Welcome to my Site</div>
+        </div>
+        <div className="lightning-group-right">
+          <img src={lightning2Gif} alt="lightning" className="header-lightning header-lightning-right" />
+          <img src={lightningGif} alt="lightning" className="header-lightning header-lightning-right" />
         </div>
       </div>
 
-      {/* Floating Elements */}
-      <div className="floating-elements">
-        <div className="floating-shield shield-1">
-          <svg width="40" height="50" viewBox="0 0 40 50" className="shield-svg" style={{imageRendering: 'pixelated'}}>
-            <path d="M20 5 L5 15 L5 35 Q5 45 20 45 Q35 45 35 35 L35 15 Z" fill="#8b7355" stroke="#5a4a3a" strokeWidth="2"/>
-            <path d="M20 10 L10 18 L10 32 Q10 38 20 38 Q30 38 30 32 L30 18 Z" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            <rect x="18" y="20" width="4" height="12" fill="#5a4a3a"/>
-          </svg>
-        </div>
-        <div className="floating-shield shield-2">
-          <svg width="40" height="50" viewBox="0 0 40 50" className="shield-svg" style={{imageRendering: 'pixelated'}}>
-            <path d="M20 5 L5 15 L5 35 Q5 45 20 45 Q35 45 35 35 L35 15 Z" fill="#8b7355" stroke="#5a4a3a" strokeWidth="2"/>
-            <path d="M20 10 L10 18 L10 32 Q10 38 20 38 Q30 38 30 32 L30 18 Z" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            <circle cx="20" cy="24" r="4" fill="#5a4a3a"/>
-          </svg>
-        </div>
+      {/* Chain Separator - Above Menu */}
+      <div className="chain-separator">
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
       </div>
 
-      {/* Header */}
-      <div className="retro-header">
-        <div className="crown-icon">
-          <svg width="60" height="40" viewBox="0 0 60 40" className="crown-svg" style={{imageRendering: 'pixelated'}}>
-            {/* Left peak */}
-            <rect x="10" y="25" width="8" height="15" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            <rect x="10" y="25" width="4" height="8" fill="#c49f27"/>
-            <rect x="14" y="25" width="4" height="8" fill="#d4af37"/>
-            <rect x="12" y="20" width="4" height="5" fill="#8b7355"/>
-            {/* Center peak */}
-            <rect x="26" y="20" width="8" height="20" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            <rect x="26" y="20" width="4" height="10" fill="#c49f27"/>
-            <rect x="30" y="20" width="4" height="10" fill="#d4af37"/>
-            <rect x="28" y="15" width="4" height="5" fill="#8b7355"/>
-            {/* Right peak */}
-            <rect x="37" y="25" width="8" height="15" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            <rect x="37" y="25" width="4" height="8" fill="#c49f27"/>
-            <rect x="41" y="25" width="4" height="8" fill="#d4af37"/>
-            <rect x="39" y="20" width="4" height="5" fill="#8b7355"/>
-            {/* Gems - pixelated */}
-            <rect x="17" y="28" width="2" height="2" fill="#8b7355"/>
-            <rect x="28" y="23" width="2" height="2" fill="#8b7355"/>
-            <rect x="39" y="28" width="2" height="2" fill="#8b7355"/>
-          </svg>
-        </div>
-        <h1 className="retro-title">
-          <span className="title-letter">I</span>
-          <span className="title-letter"> </span>
-          <span className="title-letter">A</span>
-          <span className="title-letter">M</span>
-          <span className="title-letter"> </span>
-          <span className="title-letter">A</span>
-          <span className="title-letter">L</span>
-          <span className="title-letter">E</span>
-          <span className="title-letter">X</span>
-        </h1>
-        <div className="retro-subtitle">Music Producer & Musician</div>
-        <div className="blink-text">[ MY PERSONAL SPACE ]</div>
+      {/* Navigation Menu */}
+      <nav className="gothic-menu">
+        <button 
+          className={`gothic-menu-item ${activeSection === 'about' ? 'active' : ''}`}
+          onClick={() => setActiveSection('about')}
+        >
+          About Me
+        </button>
+        <button 
+          className={`gothic-menu-item ${activeSection === 'music' ? 'active' : ''}`}
+          onClick={() => setActiveSection('music')}
+        >
+          Music
+        </button>
+        <button 
+          className={`gothic-menu-item ${activeSection === 'record' ? 'active' : ''}`}
+          onClick={() => setShowRecordCollection(true)}
+        >
+          Record Collector
+        </button>
+      </nav>
+
+      {/* Chain Separator - Below Menu */}
+      <div className="chain-separator">
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
+        <img src={chainGif} alt="chain" className="chain-gif" />
       </div>
 
-      {/* Animated divider with Medieval Banner */}
-      <div className="retro-divider">
-        <div className="divider-line"></div>
-        <div className="divider-banner">
-          <svg width="100" height="40" viewBox="0 0 100 40" className="banner-svg">
-            <path d="M10 5 Q50 0 90 5 L90 35 Q50 40 10 35 Z" fill="#8b7355" stroke="#d4af37" strokeWidth="2"/>
-            <path d="M15 10 Q50 5 85 10 L85 30 Q50 35 15 30 Z" fill="#5a4a3a"/>
-            <text x="50" y="25" textAnchor="middle" fill="#d4af37" fontSize="12" fontFamily="Courier New" fontWeight="bold">⚔ ⚔ ⚔</text>
-          </svg>
-        </div>
-        <div className="divider-line"></div>
-      </div>
+      {/* Main Content Sections */}
+      <div className="gothic-content">
+        {/* About Me Section */}
+        {activeSection === 'about' && (
+          <>
+            <div className="gothic-section">
+              <div className="section-gif-left">
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <img key={i} src={castleGif} alt="castle" className="section-gif" />
+                ))}
+              </div>
+              <div className="section-content">
+                <h2 className="gothic-heading">About Me</h2>
+                <p className="gothic-text">
+                  I'm Alex, a Web Developer. 
+                  If you want to talk about creative projects,{' '}
+                  <a href="#" className="cta-link" onClick={handleOpenContact}>
+                    text me
+                  </a>
+                </p>
+                <p className="gothic-text">
+                  I collect records and play music.{' '}
+                  <button 
+                    className="gothic-button"
+                    onClick={() => setShowRecordCollection(true)}
+                  >
+                    Show My Record Collection
+                  </button>
+                </p>
+              </div>
+              <div className="section-gif-right">
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <img key={i} src={magicianGif} alt="magician" className="section-gif" />
+                ))}
+              </div>
+            </div>
 
-      {/* Main Content */}
-      <div className="retro-content">
-        {/* About Section */}
-        <div className="retro-section">
-          <div className="section-header">
-            <svg width="30" height="30" viewBox="0 0 30 30" className="section-icon-svg">
-              <path d="M15 5 L20 15 L10 15 Z" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            </svg>
-            <h2 className="retro-heading">About Me</h2>
-            <svg width="30" height="30" viewBox="0 0 30 30" className="section-icon-svg">
-              <path d="M15 5 L10 15 L20 15 Z" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            </svg>
-          </div>
-          <div className="section-body">
-            <p className="retro-text">
-              Hey there! I'm <span className="highlight-red">Alex</span>, a musician and music producer. 
-              When I'm not coding, I'm making music, playing in a band, and producing tracks in my studio.
-              I love collecting vinyl records and discovering new sounds from different eras.
-            </p>
-            <p className="retro-text">
-              I'm a total <span className="highlight-red">tapir nerd</span> - they're my favorite animals! 🐾
-            </p>
-          </div>
-        </div>
+          </>
+        )}
 
-        {/* Hobbies Section */}
-        <div className="retro-section">
-          <div className="section-header">
-            <svg width="30" height="30" viewBox="0 0 30 30" className="section-icon-svg">
-              <path d="M15 5 L20 15 L10 15 Z" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            </svg>
-            <h2 className="retro-heading">Hobbies</h2>
-            <svg width="30" height="30" viewBox="0 0 30 30" className="section-icon-svg">
-              <path d="M15 5 L10 15 L20 15 Z" fill="#d4af37" stroke="#8b7355" strokeWidth="1"/>
-            </svg>
-          </div>
-          <div className="section-body">
-            <div className="hobbies-content">
-              <p className="retro-text">
-                When I'm not coding, I'm passionate about music! I make music, play in a band, and do music production in my own studio. These are the things I love to do in my free time.
-              </p>
-              
-              {/* Band Section */}
-              <div className="hobbies-subsection band-section">
-                <h3 className="hobbies-subtitle">My Band</h3>
-                <div className="band-content">
-                  <div className="band-image-container">
-                    <img 
-                      src={bandPicture} 
-                      alt="Void & The Nothingness" 
-                      className="band-picture"
-                    />
-                    <div className="band-image-border"></div>
-                  </div>
-                  <div className="band-info">
-                    <p className="retro-text">
-                      Check out my band <strong>Void & The Nothingness</strong> on Bandcamp!
-                    </p>
-                    <a 
-                      href="https://voidnothingnessdoom.bandcamp.com/" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="bandcamp-link retro-button"
-                    >
-                      <span className="button-icon">🎸</span>
-                      Visit Bandcamp Profile
-                    </a>
+        {/* Music Section */}
+        {activeSection === 'music' && (
+          <>
+            <div className="gothic-section">
+              <div className="section-gif-left">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <img key={i} src={hexeGif} alt="hexe" className="section-gif" />
+                ))}
+              </div>
+              <div className="section-content">
+                <h2 className="gothic-heading">Music</h2>
+                <p className="gothic-text">
+                  When I'm not coding, I'm passionate about music! I make music, play in a band, and do music production.
+                </p>
+                
+                {/* Band Section */}
+                <div className="band-section">
+                  <h3 className="gothic-subheading">My Band</h3>
+                  <div className="band-content">
+                    <div className="band-image-container">
+                      <img 
+                        src={bandPicture} 
+                        alt="Void & The Nothingness" 
+                        className="band-picture"
+                      />
+                    </div>
+                    <div className="band-info">
+                      <div className="bandcamp-embeds">
+                        <div className="bandcamp-embed-wrapper">
+                          <iframe 
+                            style={{border: 0, width: '100%', height: '120px'}} 
+                            src="https://bandcamp.com/EmbeddedPlayer/album=2413986700/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/artwork=small/transparent=true/" 
+                            seamless
+                            title="Ride Out / Witching Hour"
+                          ><a href="https://voidnothingnessdoom.bandcamp.com/album/ride-out-witching-hour">Ride Out / Witching Hour by Void &amp; The Nothingness</a></iframe>
+                        </div>
+                        <div className="bandcamp-embed-wrapper">
+                          <iframe 
+                            style={{border: 0, width: '100%', height: '120px'}} 
+                            src="https://bandcamp.com/EmbeddedPlayer/album=786884318/size=large/bgcol=333333/linkcol=ffffff/tracklist=false/artwork=small/transparent=true/" 
+                            seamless
+                            title="Void & The Nothingness"
+                          ><a href="https://voidnothingnessdoom.bandcamp.com/album/void-the-nothingness">Void &amp; The Nothingness by Void &amp; The Nothingness</a></iframe>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              {/* Record Collection Section */}
-              <div className="hobbies-subsection">
-                <h3 className="hobbies-subtitle">Collection Records</h3>
-                <p className="retro-text">
-                  Browse my vinyl collection sorted by artist. Each record tells a story and represents a moment in music history.
-                </p>
-                <button 
-                  className="retro-button collection-button"
-                  onClick={() => setShowRecordCollection(true)}
-                >
-                  <span className="button-icon">📀</span>
-                  Show My Record Collection
-                </button>
+              <div className="section-gif-right">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <img key={i} src={dragonGif} alt="dragon" className="section-gif" />
+                ))}
               </div>
+            </div>
+
+          </>
+        )}
+
+      </div>
+
+      {/* Spotify Embed - Global */}
+      <div className="spotify-embed-container">
+        <div className="spotify-embed-wrapper">
+          <div className="spotify-flames">
+            <div className="spotify-flame-column">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <img key={i} src={fireandFlameGif} alt="flame" className="spotify-flame" />
+              ))}
+            </div>
+            <div className="spotify-iframe-container">
+              <iframe 
+                data-testid="embed-iframe" 
+                style={{borderRadius: '12px'}} 
+                src="https://open.spotify.com/embed/playlist/07J2uE4csQ5AXH8a2OpEfy?utm_source=generator&theme=0&autoplay=true" 
+                width="100%" 
+                height="352" 
+                frameBorder="0" 
+                allowFullScreen="" 
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                loading="lazy"
+                className="spotify-iframe"
+              ></iframe>
+            </div>
+            <div className="spotify-flame-column">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <img key={i} src={fireandFlameGif} alt="flame" className="spotify-flame" />
+              ))}
             </div>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="retro-footer">
+      <div className="gothic-footer">
         <div className="footer-text">© 2024 Alex | Made with ❤️ and 🎵</div>
         <div className="footer-counter">Visitors: {visitorCount.toLocaleString()}</div>
       </div>
@@ -256,4 +252,3 @@ const PersonalWebsite = () => {
 };
 
 export default PersonalWebsite;
-

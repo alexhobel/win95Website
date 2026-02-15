@@ -18,6 +18,7 @@ const Desktop = () => {
   const zIndexCounterRef = useRef(100);
   const windowIdCounter = useRef(0);
   const musicMakerWindowIdsRef = useRef(new Map()); // Map service.id -> window.id
+  const browserInitializedRef = useRef(false); // Track if browser has been auto-opened
   // Load saved settings from localStorage on mount
   const loadDesktopSettings = () => {
     if (typeof window !== 'undefined') {
@@ -393,6 +394,41 @@ const Desktop = () => {
     ));
     setZIndexCounter(zIndexCounter + 1);
   };
+
+  // Open browser window automatically on mount in full screen
+  useEffect(() => {
+    if (browserInitializedRef.current) return; // Only run once
+    
+    const browserService = services.find(s => s.id === 'browser');
+    if (browserService) {
+      browserInitializedRef.current = true;
+      // Open browser window maximized
+      windowIdCounter.current += 1;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight - 40; // Account for taskbar
+      const windowWidth = browserService.content.isBrowser ? 900 : 500;
+      const windowHeight = browserService.content.isBrowser ? 700 : 400;
+      
+      setOpenWindows([{
+        id: `browser-${windowIdCounter.current}`,
+        serviceId: browserService.id,
+        title: browserService.content.title,
+        content: browserService.content,
+        x: 0,
+        y: 0,
+        zIndex: zIndexCounter,
+        minimized: false,
+        maximized: true, // Start maximized
+        width: viewportWidth,
+        height: viewportHeight,
+        originalX: 100,
+        originalY: 100,
+        originalWidth: windowWidth,
+        originalHeight: windowHeight
+      }]);
+      setZIndexCounter(prev => prev + 1);
+    }
+  }, [services, zIndexCounter]); // Include zIndexCounter for the setter
 
   // Listen for custom event to open contact form
   useEffect(() => {

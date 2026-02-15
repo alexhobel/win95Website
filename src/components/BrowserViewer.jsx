@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Toolbar, Button, Frame, ProgressBar } from 'react95';
 import PersonalWebsite from './PersonalWebsite';
-import BusinessWebsite from './BusinessWebsite';
 import browserIcon from '../assets/BrowserIcon.webp';
 import './BrowserViewer.css';
 
@@ -94,22 +93,6 @@ const BrowserViewer = ({ onUrlChange }) => {
           <span className="tab-text">Personal</span>
           {activeTab === 'personal' && <span className="tab-close">×</span>}
         </button>
-        <button
-          className={`browser-tab ${activeTab === 'business' ? 'active' : ''}`}
-          onClick={() => {
-            const newUrl = 'http://alexanderhobelsberger.de/business';
-            setActiveTab('business');
-            setUrl(newUrl);
-            if (onUrlChange) {
-              setTimeout(() => onUrlChange(newUrl), 0);
-            }
-            // Don't show loading when switching tabs after initial load
-          }}
-        >
-          <span className="tab-icon">💼</span>
-          <span className="tab-text">Business</span>
-          {activeTab === 'business' && <span className="tab-close">×</span>}
-        </button>
       </div>
 
       {/* Address Bar */}
@@ -144,7 +127,7 @@ const BrowserViewer = ({ onUrlChange }) => {
             </div>
           </div>
         ) : (
-          activeTab === 'personal' ? <PersonalWebsite /> : <BusinessWebsite />
+          <PersonalWebsite />
         )}
       </div>
 

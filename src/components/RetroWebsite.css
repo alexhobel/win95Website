@@ -27,6 +27,441 @@
 
 .retro-website.loaded {
   /* No animation - instant display */
+  opacity: 1;
+}
+
+/* Gothic 2000s Theme - Black/White/Red */
+.retro-website.gothic-theme {
+  background: #000;
+  background-image: none;
+  color: #fff;
+  padding: 20px;
+}
+
+/* Gothic Header */
+.gothic-header {
+  background: #000;
+  border: none;
+  padding: 30px 20px;
+  text-align: center;
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.lightning-group-left,
+.lightning-group-right {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.lightning-group-left {
+  justify-content: flex-end;
+}
+
+.lightning-group-right {
+  justify-content: flex-start;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.gothic-title {
+  font-family: 'UnifrakturMaguntia', 'MedievalSharp', 'Creepster', 'Nosifer', serif;
+  font-size: 64px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  margin: 0;
+  font-weight: normal;
+}
+
+.header-subtitle {
+  font-family: 'MedievalSharp', 'Creepster', 'Nosifer', serif;
+  font-size: 18px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin: 0;
+}
+
+.gothic-subheading {
+  font-family: 'MedievalSharp', 'Creepster', 'Nosifer', serif;
+  font-size: 24px;
+  color: #ff0000;
+  text-transform: uppercase;
+  margin: 20px 0 15px 0;
+}
+
+.header-lightning {
+  width: 150px;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.header-lightning-left {
+  transform: scaleX(-1);
+}
+
+/* Navigation Menu */
+.gothic-menu {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: transparent;
+  border: none;
+}
+
+.gothic-menu-item {
+  background: #000;
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 10px 25px;
+  font-family: 'MedievalSharp', 'Creepster', 'Nosifer', serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.gothic-menu-item:hover {
+  background: #fff;
+  color: #000;
+}
+
+.gothic-menu-item.active {
+  background: #ff0000;
+  color: #fff;
+  border-color: #ff0000;
+}
+
+/* Chain Separator */
+.chain-separator {
+  margin: 30px 0;
+  padding: 10px 0;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  position: relative;
+}
+
+.chain-gif {
+  height: 40px;
+  width: auto;
+  image-rendering: pixelated;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* Gothic Content Sections */
+.gothic-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #000 !important;
+  padding: 20px;
+}
+
+.gothic-section {
+  display: grid;
+  grid-template-columns: 150px 1fr 150px;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding: 30px;
+  background: #000;
+  border: 2px solid #fff;
+  align-items: start;
+}
+
+.section-content {
+  background: #000;
+  padding: 20px;
+}
+
+.section-gif-left,
+.section-gif-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  overflow-x: auto;
+  flex-wrap: wrap;
+  max-height: 100%;
+}
+
+.section-gif {
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  max-width: 150px;
+  max-height: 200px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.cta-link {
+  color: #fff;
+  background: #000;
+  border: 2px dotted #fff;
+  padding: 8px 15px;
+  display: inline-block;
+  text-decoration: none;
+  transition: all 0.3s;
+  font-family: 'MedievalSharp', 'Creepster', 'Nosifer', serif;
+  text-transform: uppercase;
+}
+
+.cta-link:hover {
+  background: #ff0000;
+  border-color: #ff0000;
+  color: #fff;
+}
+
+.gothic-heading {
+  font-family: 'UnifrakturMaguntia', 'MedievalSharp', 'Creepster', 'Nosifer', serif;
+  font-size: 36px;
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 10px;
+}
+
+.gothic-text {
+  font-family: 'MedievalSharp', 'Creepster', 'Nosifer', serif;
+  font-size: 16px;
+  color: #fff;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.highlight-red {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+/* Gothic Buttons */
+.gothic-button {
+  background: #000;
+  border: 2px dotted #fff;
+  color: #fff;
+  padding: 12px 30px;
+  font-family: 'MedievalSharp', 'Creepster', 'Nosifer', serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: url('../assets/Gifs/Fackel.gif') 1 1, pointer;
+  transition: all 0.3s;
+  display: inline-block;
+  margin-top: 15px;
+}
+
+.gothic-button:hover {
+  background: #ff0000;
+  border-color: #ff0000;
+  color: #fff;
+}
+
+/* Pointed Frame Button - now also dotted */
+.gothic-button.pointed-frame {
+  position: relative;
+  border: 2px dotted #fff;
+  background: #000;
+  padding: 15px 40px;
+}
+
+.gothic-button.pointed-frame:hover {
+  border-color: #ff0000;
+  background: #ff0000;
+}
+
+/* Band Section */
+.band-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+}
+
+.band-content {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.band-image-container {
+  flex-shrink: 0;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.gothic-theme .band-image-container {
+  border: none;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  transform: none;
+}
+
+.band-picture {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border: 2px dotted #fff !important;
+  image-rendering: pixelated;
+}
+
+.band-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.bandcamp-link {
+  text-decoration: none;
+}
+
+.bandcamp-embeds {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.bandcamp-embed-wrapper {
+  width: 100%;
+  border: 2px dotted #fff;
+  padding: 10px;
+  background: #000;
+}
+
+.bandcamp-embed-wrapper iframe {
+  width: 100%;
+  border: none;
+}
+
+/* Spotify Embed Container */
+.spotify-embed-container {
+  margin: 50px auto;
+  max-width: 800px;
+  padding: 20px;
+  background: #000;
+  border: none;
+  position: relative;
+}
+
+.spotify-embed-wrapper {
+  position: relative;
+  width: 100%;
+  background: #000;
+}
+
+.spotify-flames {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.spotify-flame-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.spotify-flame {
+  width: 80px;
+  height: auto;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.spotify-iframe-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.spotify-iframe {
+  width: 100%;
+  border: none;
+  image-rendering: pixelated;
+  filter: contrast(1.1) brightness(0.95);
+}
+
+/* Footer */
+.gothic-footer {
+  margin-top: 50px;
+  padding: 20px;
+  background: #000;
+  border-top: 2px solid #fff;
+  text-align: center;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.footer-text,
+.footer-counter {
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gothic-section {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .section-gif-left,
+  .section-gif-right {
+    display: none;
+  }
+  
+  .gothic-title {
+    font-size: 36px;
+    letter-spacing: 4px;
+  }
+  
+  .header-lightning {
+    width: 80px;
+  }
+  
+  .gothic-menu {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .band-content {
+    flex-direction: column;
+  }
 }
 
 /* Animated Background Pattern */
