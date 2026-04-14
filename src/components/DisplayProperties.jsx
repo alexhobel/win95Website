@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Monitor } from 'react95';
+import { Monitor, Button, Select, Frame, ScrollView } from 'react95';
 import './DisplayProperties.css';
 // Import GIF wallpapers
 import castleGif from '../assets/Gifs/Castle.gif';
@@ -66,6 +66,15 @@ const DisplayProperties = ({ onWallpaperChange, onColorChange }) => {
     { value: 'skelletton', label: 'Skelletton', gif: skellettonGif },
   ];
 
+  // Convert wallpapers to React95 Select options format
+  const wallpaperOptions = wallpapers.map((wp, index) => ({
+    value: wp.value,
+    label: wp.label
+  }));
+
+  // Find current wallpaper index for Select defaultValue
+  const currentWallpaperIndex = wallpapers.findIndex(wp => wp.value === selectedWallpaper);
+
   const handleWallpaperChange = (value) => {
     setSelectedWallpaper(value);
     if (onWallpaperChange) {
@@ -129,82 +138,84 @@ const DisplayProperties = ({ onWallpaperChange, onColorChange }) => {
     <div className="display-properties-container">
       {/* Tabs */}
       <div className="display-tabs">
-        <button
-          className={`display-tab ${activeTab === 'background' ? 'active' : ''}`}
+        <Button
+          active={activeTab === 'background'}
           onClick={() => setActiveTab('background')}
+          style={{ marginRight: '4px' }}
         >
           Background
-        </button>
-        <button
-          className={`display-tab ${activeTab === 'appearance' ? 'active' : ''}`}
+        </Button>
+        <Button
+          active={activeTab === 'appearance'}
           onClick={() => setActiveTab('appearance')}
+          style={{ marginRight: '4px' }}
         >
           Appearance
-        </button>
-        <button
-          className={`display-tab ${activeTab === 'system' ? 'active' : ''}`}
+        </Button>
+        <Button
+          active={activeTab === 'system'}
           onClick={() => setActiveTab('system')}
         >
           System
-        </button>
+        </Button>
       </div>
 
       {/* Content Area */}
-      <div className="display-content">
-        {activeTab === 'background' && (
-          <div className="background-tab">
-            {/* Monitor Preview using react95 Monitor */}
-            <div className="monitor-preview">
-              <Monitor backgroundStyles={getBackgroundStyles()} />
-            </div>
+      <Frame variant="inside" style={{ padding: '1rem', marginTop: '0.5rem', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'visible' }}>
+        <ScrollView style={{ width: '100%', flex: 1 }}>
+          {activeTab === 'background' && (
+            <div className="background-tab">
+              {/* Monitor Preview using react95 Monitor */}
+              <div className="monitor-preview">
+                <Monitor backgroundStyles={getBackgroundStyles()} />
+              </div>
 
-            {/* Wallpaper Selection */}
-            <div className="setting-row">
-              <label className="setting-label">Wallpaper:</label>
-              <div className="setting-control">
-                <select
-                  value={selectedWallpaper}
-                  onChange={(e) => handleWallpaperChange(e.target.value)}
-                  className="wallpaper-select"
-                >
-                  {wallpapers.map(wp => (
-                    <option key={wp.value} value={wp.value}>{wp.label}</option>
-                  ))}
-                </select>
+              {/* Wallpaper Selection */}
+              <div className="setting-row">
+                <label className="setting-label">Wallpaper:</label>
+                <div className="setting-control" style={{ overflow: 'visible', zIndex: 10001 }}>
+                  <Select
+                    defaultValue={currentWallpaperIndex >= 0 ? currentWallpaperIndex : 0}
+                    options={wallpaperOptions}
+                    menuMaxHeight={160}
+                    width={200}
+                    onChange={(option) => handleWallpaperChange(option.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Custom Color */}
+              <div className="setting-row">
+                <label className="setting-label">Custom color:</label>
+                <div className="setting-control color-control">
+                  <div 
+                    className="color-swatch" 
+                    style={{ backgroundColor: customColor }}
+                  />
+                  <input
+                    type="color"
+                    value={customColor}
+                    onChange={handleColorChange}
+                    className="color-input"
+                  />
+                </div>
               </div>
             </div>
+          )}
 
-            {/* Custom Color */}
-            <div className="setting-row">
-              <label className="setting-label">Custom color:</label>
-              <div className="setting-control color-control">
-                <div 
-                  className="color-swatch" 
-                  style={{ backgroundColor: customColor }}
-                />
-                <input
-                  type="color"
-                  value={customColor}
-                  onChange={handleColorChange}
-                  className="color-input"
-                />
-              </div>
+          {activeTab === 'appearance' && (
+            <div className="appearance-tab">
+              <p className="tab-placeholder">Appearance settings coming soon...</p>
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === 'appearance' && (
-          <div className="appearance-tab">
-            <p className="tab-placeholder">Appearance settings coming soon...</p>
-          </div>
-        )}
-
-        {activeTab === 'system' && (
-          <div className="system-tab">
-            <p className="tab-placeholder">System settings coming soon...</p>
-          </div>
-        )}
-      </div>
+          {activeTab === 'system' && (
+            <div className="system-tab">
+              <p className="tab-placeholder">System settings coming soon...</p>
+            </div>
+          )}
+        </ScrollView>
+      </Frame>
     </div>
   );
 };

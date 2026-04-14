@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Toolbar, Button, Frame, ProgressBar } from 'react95';
+import { Toolbar, Button, Frame, ProgressBar, TextInput, ScrollView } from 'react95';
 import PersonalWebsite from './PersonalWebsite';
 import browserIcon from '../assets/BrowserIcon.webp';
+import homeIcon from '../assets/windows98-icons/ico/homepage_alt.ico';
+import refreshIcon from '../assets/windows98-icons/ico/replace_file.ico';
 import './BrowserViewer.css';
 
 const BrowserViewer = ({ onUrlChange }) => {
-  const [activeTab, setActiveTab] = useState('personal');
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [url, setUrl] = useState('http://alexanderhobelsberger.de/personal');
@@ -51,56 +52,40 @@ const BrowserViewer = ({ onUrlChange }) => {
     setIsLoading(true);
   };
 
+  const handleHome = () => {
+    setUrl('http://alexanderhobelsberger.de/personal');
+    handleRefresh();
+  };
+
   return (
     <div className="browser-viewer-container">
       {/* Toolbar */}
       <div className="browser-toolbar-container">
         <Toolbar className="browser-toolbar">
-          <Button size="sm" className="toolbar-button-custom">
-            <span className="toolbar-icon">◀</span>
-            <span className="toolbar-text">Back</span>
-          </Button>
-          <Button size="sm" className="toolbar-button-custom">
-            <span className="toolbar-icon">▶</span>
-            <span className="toolbar-text">Forward</span>
-          </Button>
           <Button size="sm" className="toolbar-button-custom" onClick={handleRefresh}>
-            <span className="toolbar-icon">↻</span>
+            <img
+              src={refreshIcon}
+              alt="Refresh"
+              className="toolbar-icon-image"
+            />
             <span className="toolbar-text">Refresh</span>
           </Button>
-          <Button size="sm" className="toolbar-button-custom">
-            <span className="toolbar-icon">⌂</span>
+          <Button size="sm" className="toolbar-button-custom" onClick={handleHome}>
+            <img
+              src={homeIcon}
+              alt="Home"
+              className="toolbar-icon-image"
+            />
             <span className="toolbar-text">Home</span>
           </Button>
         </Toolbar>
       </div>
 
-      {/* Tabs */}
-      <div className="browser-tabs">
-        <button
-          className={`browser-tab ${activeTab === 'personal' ? 'active' : ''}`}
-          onClick={() => {
-            const newUrl = 'http://alexanderhobelsberger.de/personal';
-            setActiveTab('personal');
-            setUrl(newUrl);
-            if (onUrlChange) {
-              setTimeout(() => onUrlChange(newUrl), 0);
-            }
-            // Don't show loading when switching tabs after initial load
-          }}
-        >
-          <span className="tab-icon">🎵</span>
-          <span className="tab-text">Personal</span>
-          {activeTab === 'personal' && <span className="tab-close">×</span>}
-        </button>
-      </div>
-
       {/* Address Bar */}
       <div className="browser-address-bar">
         <label className="address-label">Address:</label>
-        <input 
-          type="text" 
-          className="address-input" 
+        <TextInput
+          variant="flat"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           onKeyPress={(e) => {
@@ -108,12 +93,13 @@ const BrowserViewer = ({ onUrlChange }) => {
               handleRefresh();
             }
           }}
+          style={{ flex: 1 }}
         />
         <Button size="sm" onClick={handleRefresh}>Go</Button>
       </div>
 
       {/* Content Area */}
-      <div className="browser-content">
+      <div className="browser-content" style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
         {isLoading ? (
           <div className="browser-loading">
             <div className="ie-loading-container">
@@ -127,7 +113,9 @@ const BrowserViewer = ({ onUrlChange }) => {
             </div>
           </div>
         ) : (
-          <PersonalWebsite />
+          <ScrollView style={{ width: '100%', flex: 1, minHeight: 0 }}>
+            <PersonalWebsite />
+          </ScrollView>
         )}
       </div>
 

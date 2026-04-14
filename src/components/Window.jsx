@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
+import { Button, Window as R95Window, WindowContent, WindowHeader } from 'react95';
 import PDFViewer from './PDFViewer';
 import BrowserViewer from './BrowserViewer';
 import FolderViewer from './FolderViewer';
 import MusicMaker from './MusicMaker';
 import MixerWindow from './MixerWindow';
+import ReverbWindow from './ReverbWindow';
 import ContactForm from './ContactForm';
 import SEOGeoChecker from './SEOGeoChecker';
 import DisplayProperties from './DisplayProperties';
@@ -231,10 +233,19 @@ const Window = ({ window, onClose, onMinimize, onMaximize, onFocus, onMove, onRe
     }
   };
 
+  const handleHeaderMouseDown = (e) => {
+    // Let resize edges work even if they overlap header area.
+    handleMouseDown(e);
+  };
+
+  const title = window.content.isBrowser
+    ? `${window.content.browserUrl || 'http://alexanderhobelsberger.de'} - Microsoft Internet Explorer`
+    : window.title;
+
   return (
     <div
       ref={windowRef}
-      className={`window ${window.content.isPDF ? 'pdf-window' : ''} ${window.content.isBrowser ? 'browser-window' : ''} ${window.content.isFolder ? 'folder-window' : ''} ${window.content.isMusicMaker ? 'music-maker-window' : ''} ${window.content.isMixer ? 'mixer-window' : ''} ${window.content.isContactForm ? 'contact-form-window' : ''} ${window.content.isSEOChecker ? 'seo-checker-window' : ''} ${window.content.isDisplayProperties ? 'display-properties-window' : ''} ${window.maximized ? 'maximized' : ''} ${window.minimized ? 'minimized' : ''} ${isSelected ? 'selected' : ''}`}
+      className={`window ${window.content.isPDF ? 'pdf-window' : ''} ${window.content.isBrowser ? 'browser-window' : ''} ${window.content.isFolder ? 'folder-window' : ''} ${window.content.isMusicMaker ? 'music-maker-window' : ''} ${window.content.isMixer ? 'mixer-window' : ''} ${window.content.isReverb ? 'reverb-window' : ''} ${window.content.isContactForm ? 'contact-form-window' : ''} ${window.content.isSEOChecker ? 'seo-checker-window' : ''} ${window.content.isDisplayProperties ? 'display-properties-window' : ''} ${window.maximized ? 'maximized' : ''} ${window.minimized ? 'minimized' : ''} ${isSelected ? 'selected' : ''}`}
       style={{
         left: `${window.x}px`,
         top: `${window.y}px`,
@@ -246,120 +257,133 @@ const Window = ({ window, onClose, onMinimize, onMaximize, onFocus, onMove, onRe
       onClick={onFocus}
       onMouseDown={handleMouseDown}
     >
-      <div 
-        className="title-bar"
-        onTouchStart={handleTouchStart}
-        onMouseDown={(e) => {
-          // Check if clicking on an edge - if so, let window handle resize
-          if (windowRef.current && !window.maximized) {
-            const rect = windowRef.current.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const nearLeft = x < RESIZE_THRESHOLD;
-            const nearRight = x > rect.width - RESIZE_THRESHOLD;
-            const nearTop = y < RESIZE_THRESHOLD;
-            
-            // If on an edge, pass to window's handleMouseDown to handle resize
-            if (nearLeft || nearRight || nearTop) {
-              handleMouseDown(e);
-              return;
-            }
-          }
-          // Otherwise, handle title bar dragging
-          handleMouseDown(e);
-        }}
-        style={{ cursor: 'default' }}
-      >
-        {window.content.isBrowser ? (
-          <div className="title-bar-text browser-title-text">
-            <span className="browser-title-icon">🌐</span>
-            {window.content.browserUrl || 'http://alexanderhobelsberger.de'} - Microsoft Internet Explorer
-          </div>
-        ) : (
-          <div className="title-bar-text">{window.title}</div>
-        )}
-        <div className="title-bar-controls">
-          <button
-            aria-label="Minimize"
-            onClick={(e) => {
-              e.stopPropagation();
-              onMinimize();
-            }}
-          >
-            <span style={{ fontSize: '12px', lineHeight: '1', fontWeight: 'bold' }}>_</span>
-          </button>
-          <button
-            aria-label={window.maximized ? "Restore" : "Maximize"}
-            onClick={(e) => {
-              e.stopPropagation();
-              onMaximize();
-            }}
-          >
-            <span style={{ fontSize: '10px', lineHeight: '1' }}>{window.maximized ? '❐' : '□'}</span>
-          </button>
-          <button
-            aria-label="Close"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose();
-            }}
-          >
-            <span style={{ fontSize: '12px', lineHeight: '1', fontWeight: 'bold' }}>×</span>
-          </button>
-        </div>
-      </div>
-      <div className={`window-body ${window.content.isPDF ? 'pdf-window-body' : ''} ${window.content.isBrowser ? 'browser-window-body' : ''} ${window.content.isFolder ? 'folder-window-body' : ''} ${window.content.isMusicMaker ? 'music-maker-window-body' : ''} ${window.content.isMixer ? 'mixer-window-body' : ''} ${window.content.isContactForm ? 'contact-form-window-body' : ''} ${window.content.isSEOChecker ? 'seo-checker-window-body' : ''} ${window.content.isDisplayProperties ? 'display-properties-window-body' : ''}`}>
-        {window.content.isPDF ? (
-          <PDFViewer pdfPath={window.content.pdfPath} />
-        ) : window.content.isBrowser ? (
-          <BrowserViewer />
-        ) : window.content.isFolder ? (
-          <FolderViewer 
-            files={window.content.files || []}
-            onFileOpen={window.content.onFileOpen}
-          />
-        ) : window.content.isMusicMaker ? (
-          <MusicMaker 
-            drumVolume={window.content.drumVolume}
-            synthVolume={window.content.synthVolume}
-            onOpenMixer={window.content.onOpenMixer}
-          />
-        ) : window.content.isMixer ? (
-          <MixerWindow
-            drumVolume={window.content.drumVolume}
-            synthVolume={window.content.synthVolume}
-            onDrumVolumeChange={window.content.onDrumVolumeChange}
-            onSynthVolumeChange={window.content.onSynthVolumeChange}
-          />
-        ) : window.content.isContactForm ? (
-          <ContactForm />
-        ) : window.content.isSEOChecker ? (
-          <SEOGeoChecker />
-        ) : window.content.isDisplayProperties ? (
-          <DisplayProperties 
-            onWallpaperChange={window.content.onWallpaperChange}
-            onColorChange={window.content.onColorChange}
-          />
-        ) : (
-          <div className="window-content">
-            <h2>{window.content.title}</h2>
-            <p>{window.content.description}</p>
-            {window.content.features && (
-              <div className="features-list">
-                <h3>Services Include:</h3>
-                <ul>
-                  {window.content.features.map((feature, index) => (
-                    <li key={index}>{feature}</li>
-                  ))}
-                </ul>
+      <R95Window style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <WindowHeader
+          active={isSelected}
+          onTouchStart={handleTouchStart}
+          onMouseDown={handleHeaderMouseDown}
+          style={{ cursor: 'default', userSelect: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+        >
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</span>
+          <span style={{ display: 'inline-flex', gap: 2 }}>
+            <Button
+              size="sm"
+              square
+              aria-label="Minimize"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMinimize();
+              }}
+            >
+              <span style={{ fontSize: '12px', lineHeight: '1', fontWeight: 'bold' }}>_</span>
+            </Button>
+            <Button
+              size="sm"
+              square
+              aria-label={window.maximized ? 'Restore' : 'Maximize'}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMaximize();
+              }}
+            >
+              <span style={{ fontSize: '10px', lineHeight: '1' }}>{window.maximized ? '❐' : '□'}</span>
+            </Button>
+            <Button
+              size="sm"
+              square
+              aria-label="Close"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+            >
+              <span style={{ fontSize: '12px', lineHeight: '1', fontWeight: 'bold' }}>×</span>
+            </Button>
+          </span>
+        </WindowHeader>
+
+        <WindowContent
+          className={`${window.content.isPDF ? 'pdf-window-body' : ''} ${window.content.isBrowser ? 'browser-window-body' : ''} ${window.content.isFolder ? 'folder-window-body' : ''} ${window.content.isMusicMaker ? 'music-maker-window-body' : ''} ${window.content.isMixer ? 'mixer-window-body' : ''} ${window.content.isReverb ? 'reverb-window-body' : ''} ${window.content.isContactForm ? 'contact-form-window-body' : ''} ${window.content.isSEOChecker ? 'seo-checker-window-body' : ''} ${window.content.isDisplayProperties ? 'display-properties-window-body' : ''}`}
+          style={{ flex: 1, minHeight: 0, overflow: 'hidden', padding: 0 }}
+        >
+          {window.content.isPDF ? (
+            <PDFViewer pdfPath={window.content.pdfPath} />
+          ) : window.content.isBrowser ? (
+            <BrowserViewer />
+          ) : window.content.isFolder ? (
+            <FolderViewer files={window.content.files || []} onFileOpen={window.content.onFileOpen} />
+          ) : window.content.isMusicMaker ? (
+            <MusicMaker
+              drumVolume={window.content.drumVolume}
+              synthVolume={window.content.synthVolume}
+              onOpenMixer={window.content.onOpenMixer}
+              drumReverbEnabled={window.content.drumReverbEnabled}
+              drumReverbRoomSize={window.content.drumReverbRoomSize}
+              drumReverbDamping={window.content.drumReverbDamping}
+              drumReverbWetLevel={window.content.drumReverbWetLevel}
+              drumReverbDryLevel={window.content.drumReverbDryLevel}
+              synthReverbEnabled={window.content.synthReverbEnabled}
+              synthReverbRoomSize={window.content.synthReverbRoomSize}
+              synthReverbDamping={window.content.synthReverbDamping}
+              synthReverbWetLevel={window.content.synthReverbWetLevel}
+              synthReverbDryLevel={window.content.synthReverbDryLevel}
+              masterReverbEnabled={window.content.masterReverbEnabled}
+              masterReverbRoomSize={window.content.masterReverbRoomSize}
+              masterReverbDamping={window.content.masterReverbDamping}
+              masterReverbWetLevel={window.content.masterReverbWetLevel}
+              masterReverbDryLevel={window.content.masterReverbDryLevel}
+            />
+          ) : window.content.isMixer ? (
+            <MixerWindow
+              drumVolume={window.content.drumVolume}
+              synthVolume={window.content.synthVolume}
+              onDrumVolumeChange={window.content.onDrumVolumeChange}
+              onSynthVolumeChange={window.content.onSynthVolumeChange}
+              onOpenDrumReverb={window.content.onOpenDrumReverb}
+              onOpenSynthReverb={window.content.onOpenSynthReverb}
+              onOpenMasterReverb={window.content.onOpenMasterReverb}
+            />
+          ) : window.content.isReverb ? (
+            <ReverbWindow
+              channelName={window.content.channelName}
+              enabled={window.content.enabled}
+              onEnabledChange={window.content.onEnabledChange}
+              roomSize={window.content.roomSize}
+              onRoomSizeChange={window.content.onRoomSizeChange}
+              damping={window.content.damping}
+              onDampingChange={window.content.onDampingChange}
+              wetLevel={window.content.wetLevel}
+              onWetLevelChange={window.content.onWetLevelChange}
+              dryLevel={window.content.dryLevel}
+              onDryLevelChange={window.content.onDryLevelChange}
+            />
+          ) : window.content.isContactForm ? (
+            <ContactForm />
+          ) : window.content.isSEOChecker ? (
+            <SEOGeoChecker />
+          ) : window.content.isDisplayProperties ? (
+            <DisplayProperties onWallpaperChange={window.content.onWallpaperChange} onColorChange={window.content.onColorChange} />
+          ) : (
+            <div className="window-content">
+              <h2>{window.content.title}</h2>
+              <p>{window.content.description}</p>
+              {window.content.features && (
+                <div className="features-list">
+                  <h3>Services Include:</h3>
+                  <ul>
+                    {window.content.features.map((feature, index) => (
+                      <li key={index}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <div className="window-footer">
+                <button className="window-button">Contact Me</button>
               </div>
-            )}
-            <div className="window-footer">
-              <button className="window-button">Contact Me</button>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </WindowContent>
+      </R95Window>
     </div>
   );
 };

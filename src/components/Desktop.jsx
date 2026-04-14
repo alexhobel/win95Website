@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import DesktopIcon from './DesktopIcon';
 import Window from './Window';
 import Taskbar from './Taskbar';
@@ -6,7 +6,7 @@ import AppBarComponent from './AppBar';
 import siteInfoPdf from '../assets/Site Information.pdf';
 import browserIcon from '../assets/windows98-icons/ico/internet_connection_wiz.ico';
 import folderIcon from '../assets/windows98-icons/ico/directory_closed_cool.ico';
-import mailIcon from '../assets/windows98-icons/ico/mailbox_world.ico';
+import mailIcon from '../assets/windows98-icons/ico/msn_cool.ico';
 import musicMakerIcon from '../assets/windows98-icons/ico/loudspeaker_wave.ico';
 import seoCheckerIcon from '../assets/windows98-icons/ico/magnifying_glass.ico';
 import settingsIcon from '../assets/windows98-icons/ico/settings_gear.ico';
@@ -17,7 +17,8 @@ const Desktop = () => {
   const [zIndexCounter, setZIndexCounter] = useState(100);
   const zIndexCounterRef = useRef(100);
   const windowIdCounter = useRef(0);
-  const musicMakerWindowIdsRef = useRef(new Map()); // Map service.id -> window.id
+  const musicMakerWindowIdsRef = useRef(new Map());
+  const openWindowRef = useRef(null); // Map service.id -> window.id
   // Load saved settings from localStorage on mount
   const loadDesktopSettings = () => {
     if (typeof window !== 'undefined') {
@@ -37,7 +38,7 @@ const Desktop = () => {
     if (typeof document !== 'undefined') {
       document.documentElement.style.setProperty('--custom-focus-color', savedDesktopSettings.color);
     }
-  }, []);
+  }, [savedDesktopSettings.color]);
 
   // Save settings to localStorage whenever they change
   useEffect(() => {
@@ -148,7 +149,7 @@ const Desktop = () => {
         onColorChange: (color) => setDesktopColor(color)
       }
     }
-  ], [desktopWallpaper, desktopColor]);
+  ], []);
 
   // Initialize icon positions state - load from localStorage or use default grid
   const [iconPositions, setIconPositions] = useState(() => {
@@ -189,23 +190,336 @@ const Desktop = () => {
     return positions;
   }, [services, iconPositions]);
 
-  const openWindow = (service) => {
-    // Check if a window for this service is already open
-    const existingWindow = openWindows.find(w => w.serviceId === service.id);
+  // Helper function to create onOpenMixer callback
+  const createOnOpenMixerCallback = useCallback((musicMakerServiceId) => {
+    return () => {
+      console.log('onOpenMixer callback called for service:', musicMakerServiceId);
+      setOpenWindows(prev => {
+        // Always find the window dynamically by serviceId - don't rely on ref or closure
+        const musicMakerWindow = prev.find(w => 
+          w.serviceId === musicMakerServiceId && w.content.isMusicMaker
+        );
+        
+        if (!musicMakerWindow) {
+          console.warn('Music Maker window not found for service:', musicMakerServiceId);
+          console.log('Available windows:', prev.map(w => ({ id: w.id, serviceId: w.serviceId, isMusicMaker: w.content?.isMusicMaker })));
+          return prev;
+        }
+        
+        const currentWindowId = musicMakerWindow.id;
+        // Update ref for future use
+        musicMakerWindowIdsRef.current.set(musicMakerServiceId, currentWindowId);
+        console.log('Found Music Maker window:', currentWindowId);
+        
+        const existingMixer = prev.find(w => 
+          w.parentWindowId === currentWindowId && w.content.isMixer
+        );
+        
+        if (existingMixer) {
+          console.log('Bringing existing mixer to front');
+          const maxZIndex = prev.length > 0 ? Math.max(...prev.map(w => w.zIndex)) : zIndexCounterRef.current;
+          const newZIndex = maxZIndex + 1;
+          setZIndexCounter(newZIndex);
+          return prev.map(w => 
+            w.id === existingMixer.id ? { ...w, zIndex: newZIndex } : w
+          );
+        } else {
+          console.log('Creating new mixer window');
+          // Create new mixer subwindow
+          const mixerDrumVolume = musicMakerWindow.content.drumVolume ?? 0.7;
+          const mixerSynthVolume = musicMakerWindow.content.synthVolume ?? 0.7;
+
+          // Ensure we have working volume callbacks for both channels
+          const onDrumVolumeChange =
+            musicMakerWindow.content.onDrumVolumeChange ||
+            ((volume) => {
+              setOpenWindows(prevWindows =>
+                prevWindows.map(w =>
+                  w.id === currentWindowId
+                    ? { ...w, content: { ...w.content, drumVolume: volume } }
+                    : w.parentWindowId === currentWindowId && w.content.isMixer
+                    ? { ...w, content: { ...w.content, drumVolume: volume } }
+                    : w
+                )
+              );
+            });
+
+          const onSynthVolumeChange =
+            musicMakerWindow.content.onSynthVolumeChange ||
+            ((volume) => {
+              setOpenWindows(prevWindows =>
+                prevWindows.map(w =>
+                  w.id === currentWindowId
+                    ? { ...w, content: { ...w.content, synthVolume: volume } }
+                    : w.parentWindowId === currentWindowId && w.content.isMixer
+                    ? { ...w, content: { ...w.content, synthVolume: volume } }
+                    : w
+                )
+              );
+            });
+          
+          windowIdCounter.current += 1;
+          const mixerX = musicMakerWindow.x + 50;
+          const mixerY = musicMakerWindow.y + 50;
+          const mixerWidth = 1000;
+          const mixerHeight = 600;
+          const maxZIndex = prev.length > 0 ? Math.max(...prev.map(w => w.zIndex)) : zIndexCounterRef.current;
+          const newZIndex = maxZIndex + 1;
+          setZIndexCounter(newZIndex);
+          
+          // Copy handlers from music maker window, but exclude isMusicMaker flag
+          const { isMusicMaker: _, ...musicMakerContentWithoutFlag } = musicMakerWindow.content;
+          const mixerWindow = {
+            id: `mixer-${windowIdCounter.current}`,
+            serviceId: 'mixer',
+            title: 'Mixer',
+            content: {
+              ...musicMakerContentWithoutFlag,
+              // Override with mixer-specific values
+              isMixer: true,
+              isMusicMaker: false, // Explicitly set to false to prevent rendering as MusicMaker
+              title: 'Mixer',
+              description: 'Audio Mixer',
+              drumVolume: mixerDrumVolume,
+              synthVolume: mixerSynthVolume,
+              onDrumVolumeChange,
+              onSynthVolumeChange,
+            },
+            x: mixerX,
+            y: mixerY,
+            zIndex: newZIndex,
+            minimized: false,
+            maximized: false,
+            width: mixerWidth,
+            height: mixerHeight,
+            originalX: mixerX,
+            originalY: mixerY,
+            originalWidth: mixerWidth,
+            originalHeight: mixerHeight,
+            parentWindowId: currentWindowId
+          };
+          
+          console.log('Created mixer window:', mixerWindow.id);
+          return [...prev, mixerWindow];
+        }
+      });
+    };
+  }, [setOpenWindows]);
+
+  // Helper function to create reverb window open callbacks
+  const createReverbHandlers = useCallback((musicMakerServiceId) => {
+    const createReverbOpener = (channelName) => {
+      return () => {
+        setOpenWindows(prev => {
+          // Find the music maker window
+          const musicMakerWindow = prev.find(w => 
+            w.serviceId === musicMakerServiceId && w.content.isMusicMaker
+          );
+          
+          if (!musicMakerWindow) {
+            console.warn('Music Maker window not found for service:', musicMakerServiceId);
+            return prev;
+          }
+          
+          const currentWindowId = musicMakerWindow.id;
+          
+          // Check if reverb window already exists for this channel
+          const existingReverb = prev.find(w => 
+            w.parentWindowId === currentWindowId && w.content.isReverb && w.content.channelName === channelName
+          );
+          
+          if (existingReverb) {
+            // Bring reverb to front if it exists
+            const maxZIndex = prev.length > 0 ? Math.max(...prev.map(w => w.zIndex)) : zIndexCounterRef.current;
+            const newZIndex = maxZIndex + 1;
+            setZIndexCounter(newZIndex);
+            return prev.map(w => 
+              w.id === existingReverb.id ? { ...w, zIndex: newZIndex } : w
+            );
+          } else {
+            // Create new reverb window
+            windowIdCounter.current += 1;
+            const reverbX = musicMakerWindow.x + 100;
+            const reverbY = musicMakerWindow.y + 100;
+            const reverbWidth = 400;
+            const reverbHeight = 500;
+            const maxZIndex = prev.length > 0 ? Math.max(...prev.map(w => w.zIndex)) : zIndexCounterRef.current;
+            const newZIndex = maxZIndex + 1;
+            setZIndexCounter(newZIndex);
+            
+            // Get reverb state from music maker window
+            const enabledKey = `${channelName}ReverbEnabled`;
+            const roomSizeKey = `${channelName}ReverbRoomSize`;
+            const dampingKey = `${channelName}ReverbDamping`;
+            const wetLevelKey = `${channelName}ReverbWetLevel`;
+            const dryLevelKey = `${channelName}ReverbDryLevel`;
+            
+            const enabled = musicMakerWindow.content[enabledKey] ?? false;
+            const roomSize = musicMakerWindow.content[roomSizeKey] ?? 0.5;
+            const damping = musicMakerWindow.content[dampingKey] ?? 0.5;
+            const wetLevel = musicMakerWindow.content[wetLevelKey] ?? 0.3;
+            const dryLevel = musicMakerWindow.content[dryLevelKey] ?? 0.7;
+            
+            // Create handlers for this channel - these will be created fresh each time
+            // They need to capture currentWindowId from the closure
+            const reverbWindowId = `reverb-${channelName}-${windowIdCounter.current}`;
+            
+            const onEnabledChange = (value) => {
+              setOpenWindows(prevWindows => prevWindows.map(w => 
+                w.id === currentWindowId 
+                  ? { ...w, content: { ...w.content, [enabledKey]: value } }
+                  : w.parentWindowId === currentWindowId && w.content.isMixer
+                  ? { ...w, content: { ...w.content, [enabledKey]: value } }
+                  : w.id === reverbWindowId
+                  ? { ...w, content: { ...w.content, enabled: value } }
+                  : w
+              ));
+            };
+            
+            const onRoomSizeChange = (value) => {
+              setOpenWindows(prevWindows => prevWindows.map(w => 
+                w.id === currentWindowId 
+                  ? { ...w, content: { ...w.content, [roomSizeKey]: value } }
+                  : w.parentWindowId === currentWindowId && w.content.isMixer
+                  ? { ...w, content: { ...w.content, [roomSizeKey]: value } }
+                  : w.id === reverbWindowId
+                  ? { ...w, content: { ...w.content, roomSize: value } }
+                  : w
+              ));
+            };
+            
+            const onDampingChange = (value) => {
+              setOpenWindows(prevWindows => prevWindows.map(w => 
+                w.id === currentWindowId 
+                  ? { ...w, content: { ...w.content, [dampingKey]: value } }
+                  : w.parentWindowId === currentWindowId && w.content.isMixer
+                  ? { ...w, content: { ...w.content, [dampingKey]: value } }
+                  : w.id === reverbWindowId
+                  ? { ...w, content: { ...w.content, damping: value } }
+                  : w
+              ));
+            };
+            
+            const onWetLevelChange = (value) => {
+              setOpenWindows(prevWindows => prevWindows.map(w => 
+                w.id === currentWindowId 
+                  ? { ...w, content: { ...w.content, [wetLevelKey]: value } }
+                  : w.parentWindowId === currentWindowId && w.content.isMixer
+                  ? { ...w, content: { ...w.content, [wetLevelKey]: value } }
+                  : w.id === reverbWindowId
+                  ? { ...w, content: { ...w.content, wetLevel: value } }
+                  : w
+              ));
+            };
+            
+            const onDryLevelChange = (value) => {
+              setOpenWindows(prevWindows => prevWindows.map(w => 
+                w.id === currentWindowId 
+                  ? { ...w, content: { ...w.content, [dryLevelKey]: value } }
+                  : w.parentWindowId === currentWindowId && w.content.isMixer
+                  ? { ...w, content: { ...w.content, [dryLevelKey]: value } }
+                  : w.id === reverbWindowId
+                  ? { ...w, content: { ...w.content, dryLevel: value } }
+                  : w
+              ));
+            };
+            
+            const reverbWindow = {
+              id: `reverb-${channelName}-${windowIdCounter.current}`,
+              serviceId: 'reverb',
+              title: `${channelName.toUpperCase()} - REVERB`,
+              content: {
+                title: `${channelName.toUpperCase()} - REVERB`,
+                description: 'Reverb Plugin',
+                isReverb: true,
+                channelName: channelName,
+                enabled: enabled,
+                roomSize: roomSize,
+                damping: damping,
+                wetLevel: wetLevel,
+                dryLevel: dryLevel,
+                onEnabledChange: onEnabledChange,
+                onRoomSizeChange: onRoomSizeChange,
+                onDampingChange: onDampingChange,
+                onWetLevelChange: onWetLevelChange,
+                onDryLevelChange: onDryLevelChange,
+              },
+              x: reverbX,
+              y: reverbY,
+              zIndex: newZIndex,
+              minimized: false,
+              maximized: false,
+              width: reverbWidth,
+              height: reverbHeight,
+              originalX: reverbX,
+              originalY: reverbY,
+              originalWidth: reverbWidth,
+              originalHeight: reverbHeight,
+              parentWindowId: currentWindowId
+            };
+            
+            return [...prev, reverbWindow];
+          }
+        });
+      };
+    };
     
-    if (existingWindow) {
-      // Window already exists - restore if minimized and bring to front
-      setOpenWindows(openWindows.map(w => 
-        w.id === existingWindow.id 
-          ? { ...w, minimized: false, zIndex: zIndexCounter }
-          : w
-      ));
-      setZIndexCounter(zIndexCounter + 1);
-    } else {
+    return {
+      onOpenDrumReverb: createReverbOpener('drums'),
+      onOpenSynthReverb: createReverbOpener('synth'),
+      onOpenMasterReverb: createReverbOpener('master')
+    };
+  }, []);
+
+  const openWindow = useCallback((service) => {
+    // Check if a window for this service is already open
+    setOpenWindows(prev => {
+      const existingWindow = prev.find(w => w.serviceId === service.id);
+      
+      if (existingWindow) {
+        // Window already exists - restore if minimized and bring to front
+        const maxZIndex = prev.length > 0 ? Math.max(...prev.map(w => w.zIndex)) : zIndexCounterRef.current;
+        const newZIndex = maxZIndex + 1;
+        setZIndexCounter(newZIndex);
+        
+        // If it's a Music Maker window, update the callbacks to ensure they're fresh
+        if (service.content.isMusicMaker && existingWindow.content.isMusicMaker) {
+          const musicMakerServiceId = service.id;
+          // Always update the ref mapping to match the actual window ID BEFORE creating callback
+          musicMakerWindowIdsRef.current.set(musicMakerServiceId, existingWindow.id);
+          console.log('Updated ref mapping:', musicMakerServiceId, '->', existingWindow.id);
+          // Create fresh callbacks - they will find the window dynamically
+          const freshMixerCallback = createOnOpenMixerCallback(musicMakerServiceId);
+          const reverbHandlers = createReverbHandlers(musicMakerServiceId);
+          return prev.map(w => {
+            if (w.id === existingWindow.id) {
+              // Update the window with fresh callbacks
+              return {
+                ...w,
+                minimized: false,
+                zIndex: newZIndex,
+                content: {
+                  ...w.content,
+                  onOpenMixer: freshMixerCallback,
+                  ...reverbHandlers
+                }
+              };
+            }
+            return w;
+          });
+        }
+        
+        return prev.map(w => 
+          w.id === existingWindow.id 
+            ? { ...w, minimized: false, zIndex: newZIndex }
+            : w
+        );
+      }
+      
       // No existing window - create a new one
       windowIdCounter.current += 1;
-      const initialX = 100 + (openWindows.length * 30);
-      const initialY = 100 + (openWindows.length * 30);
+      const initialX = 100 + (prev.length * 30);
+      const initialY = 100 + (prev.length * 30);
       const windowWidth = service.content.isPDF ? 800 : service.content.isBrowser ? 900 : service.content.isFolder ? 600 : service.content.isMusicMaker ? 800 : service.content.isContactForm ? 700 : service.content.isSEOChecker ? 900 : 500;
       const windowHeight = service.content.isPDF ? 600 : service.content.isBrowser ? 700 : service.content.isFolder ? 500 : service.content.isMusicMaker ? 600 : service.content.isContactForm ? 600 : service.content.isSEOChecker ? 700 : 400;
       
@@ -216,7 +530,7 @@ const Desktop = () => {
           ...service.content,
           onFileOpen: (file) => {
             if (file.isPDF) {
-              // Open PDF in a new window
+              // Open PDF in a new window - use setOpenWindows directly to avoid recursion
               const pdfService = {
                 id: `pdf-${file.id}`,
                 title: file.name,
@@ -228,7 +542,10 @@ const Desktop = () => {
                   pdfPath: file.pdfPath
                 }
               };
-              openWindow(pdfService);
+              // Call openWindow via ref to avoid recursion issues
+              if (openWindowRef.current) {
+                openWindowRef.current(pdfService);
+              }
             }
           }
         };
@@ -256,106 +573,222 @@ const Desktop = () => {
         // Store the mapping for this service
         musicMakerWindowIdsRef.current.set(service.id, musicMakerWindowId);
         
+        // Capture service.id in a const to avoid closure issues
+        const musicMakerServiceId = service.id;
+        
+        // Create all handlers for the music maker window
+        const reverbHandlers = createReverbHandlers(musicMakerServiceId);
+        
         folderContent = {
           ...service.content,
           drumVolume: 0.7,
           synthVolume: 0.7,
-          onOpenMixer: () => {
-            // Use functional update to access latest state
-            setOpenWindows(prev => {
-              // Get the current window ID for this service
-              const currentWindowId = musicMakerWindowIdsRef.current.get(service.id);
-              if (!currentWindowId) {
-                console.warn('Music Maker window ID not found for service:', service.id);
-                return prev;
-              }
-              
-              // Check if music maker window still exists
-              const musicMakerWindow = prev.find(w => w.id === currentWindowId);
-              if (!musicMakerWindow) {
-                // Main window is closed, don't open mixer
-                console.warn('Music Maker window not found:', currentWindowId);
-                return prev;
-              }
-              
-              // Check if mixer window already exists for this music maker
-              const existingMixer = prev.find(w => 
-                w.parentWindowId === currentWindowId && w.content.isMixer
-              );
-              
-              if (existingMixer) {
-                // Bring mixer to front if it exists
-                const maxZIndex = prev.length > 0 ? Math.max(...prev.map(w => w.zIndex)) : zIndexCounterRef.current;
-                const newZIndex = maxZIndex + 1;
-                setZIndexCounter(newZIndex);
-                return prev.map(w => 
-                  w.id === existingMixer.id ? { ...w, zIndex: newZIndex } : w
-                );
-              } else {
-                // Create new mixer subwindow
-                const mixerDrumVolume = musicMakerWindow.content.drumVolume ?? 0.7;
-                const mixerSynthVolume = musicMakerWindow.content.synthVolume ?? 0.7;
-                
-                windowIdCounter.current += 1;
-                const mixerX = musicMakerWindow.x + 50;
-                const mixerY = musicMakerWindow.y + 50;
-                const mixerWidth = 300;
-                const mixerHeight = 350;
-                const maxZIndex = prev.length > 0 ? Math.max(...prev.map(w => w.zIndex)) : zIndexCounterRef.current;
-                const newZIndex = maxZIndex + 1;
-                setZIndexCounter(newZIndex);
-                
-                const mixerWindow = {
-                  id: `mixer-${windowIdCounter.current}`,
-                  serviceId: 'mixer',
-                  title: 'Mixer',
-                  content: {
-                    title: 'Mixer',
-                    description: 'Audio Mixer',
-                    isMixer: true,
-                    drumVolume: mixerDrumVolume,
-                    synthVolume: mixerSynthVolume,
-                    onDrumVolumeChange: (volume) => {
-                      const windowId = musicMakerWindowIdsRef.current.get(service.id);
-                      if (!windowId) return;
-                      setOpenWindows(prevWindows => prevWindows.map(w => 
-                        w.id === windowId 
-                          ? { ...w, content: { ...w.content, drumVolume: volume } }
-                          : w.parentWindowId === windowId && w.content.isMixer
-                          ? { ...w, content: { ...w.content, drumVolume: volume } }
-                          : w
-                      ));
-                    },
-                    onSynthVolumeChange: (volume) => {
-                      const windowId = musicMakerWindowIdsRef.current.get(service.id);
-                      if (!windowId) return;
-                      setOpenWindows(prevWindows => prevWindows.map(w => 
-                        w.id === windowId 
-                          ? { ...w, content: { ...w.content, synthVolume: volume } }
-                          : w.parentWindowId === windowId && w.content.isMixer
-                          ? { ...w, content: { ...w.content, synthVolume: volume } }
-                          : w
-                      ));
-                    }
-                  },
-                  x: mixerX,
-                  y: mixerY,
-                  zIndex: newZIndex,
-                  minimized: false,
-                  maximized: false,
-                  width: mixerWidth,
-                  height: mixerHeight,
-                  originalX: mixerX,
-                  originalY: mixerY,
-                  originalWidth: mixerWidth,
-                  originalHeight: mixerHeight,
-                  parentWindowId: currentWindowId
-                };
-                
-                return [...prev, mixerWindow];
-              }
-            });
-          }
+          // Initialize reverb state
+          drumReverbEnabled: false,
+          drumReverbRoomSize: 0.5,
+          drumReverbDamping: 0.5,
+          drumReverbWetLevel: 0.3,
+          drumReverbDryLevel: 0.7,
+          synthReverbEnabled: false,
+          synthReverbRoomSize: 0.5,
+          synthReverbDamping: 0.5,
+          synthReverbWetLevel: 0.3,
+          synthReverbDryLevel: 0.7,
+          masterReverbEnabled: false,
+          masterReverbRoomSize: 0.5,
+          masterReverbDamping: 0.5,
+          masterReverbWetLevel: 0.3,
+          masterReverbDryLevel: 0.7,
+          // Volume change handlers
+          onDrumVolumeChange: (volume) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, drumVolume: volume } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, drumVolume: volume } }
+                : w
+            ));
+          },
+          onSynthVolumeChange: (volume) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, synthVolume: volume } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, synthVolume: volume } }
+                : w
+            ));
+          },
+          // Reverb change handlers for drums
+          onDrumReverbEnabledChange: (enabled) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, drumReverbEnabled: enabled } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, drumReverbEnabled: enabled } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'drums'
+                ? { ...w, content: { ...w.content, enabled } }
+                : w
+            ));
+          },
+          onDrumReverbRoomSizeChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, drumReverbRoomSize: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, drumReverbRoomSize: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'drums'
+                ? { ...w, content: { ...w.content, roomSize: value } }
+                : w
+            ));
+          },
+          onDrumReverbDampingChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, drumReverbDamping: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, drumReverbDamping: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'drums'
+                ? { ...w, content: { ...w.content, damping: value } }
+                : w
+            ));
+          },
+          onDrumReverbWetLevelChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, drumReverbWetLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, drumReverbWetLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'drums'
+                ? { ...w, content: { ...w.content, wetLevel: value } }
+                : w
+            ));
+          },
+          onDrumReverbDryLevelChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, drumReverbDryLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, drumReverbDryLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'drums'
+                ? { ...w, content: { ...w.content, dryLevel: value } }
+                : w
+            ));
+          },
+          // Reverb change handlers for synth
+          onSynthReverbEnabledChange: (enabled) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, synthReverbEnabled: enabled } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, synthReverbEnabled: enabled } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'synth'
+                ? { ...w, content: { ...w.content, enabled } }
+                : w
+            ));
+          },
+          onSynthReverbRoomSizeChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, synthReverbRoomSize: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, synthReverbRoomSize: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'synth'
+                ? { ...w, content: { ...w.content, roomSize: value } }
+                : w
+            ));
+          },
+          onSynthReverbDampingChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, synthReverbDamping: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, synthReverbDamping: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'synth'
+                ? { ...w, content: { ...w.content, damping: value } }
+                : w
+            ));
+          },
+          onSynthReverbWetLevelChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, synthReverbWetLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, synthReverbWetLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'synth'
+                ? { ...w, content: { ...w.content, wetLevel: value } }
+                : w
+            ));
+          },
+          onSynthReverbDryLevelChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, synthReverbDryLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, synthReverbDryLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'synth'
+                ? { ...w, content: { ...w.content, dryLevel: value } }
+                : w
+            ));
+          },
+          // Reverb change handlers for master
+          onMasterReverbEnabledChange: (enabled) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, masterReverbEnabled: enabled } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, masterReverbEnabled: enabled } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'master'
+                ? { ...w, content: { ...w.content, enabled } }
+                : w
+            ));
+          },
+          onMasterReverbRoomSizeChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, masterReverbRoomSize: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, masterReverbRoomSize: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'master'
+                ? { ...w, content: { ...w.content, roomSize: value } }
+                : w
+            ));
+          },
+          onMasterReverbDampingChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, masterReverbDamping: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, masterReverbDamping: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'master'
+                ? { ...w, content: { ...w.content, damping: value } }
+                : w
+            ));
+          },
+          onMasterReverbWetLevelChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, masterReverbWetLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, masterReverbWetLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'master'
+                ? { ...w, content: { ...w.content, wetLevel: value } }
+                : w
+            ));
+          },
+          onMasterReverbDryLevelChange: (value) => {
+            setOpenWindows(prevWindows => prevWindows.map(w => 
+              w.id === musicMakerWindowId 
+                ? { ...w, content: { ...w.content, masterReverbDryLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isMixer
+                ? { ...w, content: { ...w.content, masterReverbDryLevel: value } }
+                : w.parentWindowId === musicMakerWindowId && w.content.isReverb && w.content.channelName === 'master'
+                ? { ...w, content: { ...w.content, dryLevel: value } }
+                : w
+            ));
+          },
+          // Mixer and reverb window open handlers
+          onOpenMixer: createOnOpenMixerCallback(musicMakerServiceId),
+          ...reverbHandlers
         };
       }
       
@@ -376,10 +809,16 @@ const Desktop = () => {
         originalWidth: windowWidth,
         originalHeight: windowHeight
       };
-      setOpenWindows([...openWindows, newWindow]);
-      setZIndexCounter(zIndexCounter + 1);
-    }
-  };
+      
+      setZIndexCounter(prevZ => prevZ + 1);
+      return [...prev, newWindow];
+    });
+  }, [zIndexCounter, createOnOpenMixerCallback, createReverbHandlers]);
+  
+  // Store openWindow in ref so it can be accessed in callbacks
+  useEffect(() => {
+    openWindowRef.current = openWindow;
+  }, [openWindow]);
 
   const closeWindow = (windowId) => {
     // Close the window and any subwindows (windows with parentWindowId matching this windowId)
@@ -387,17 +826,19 @@ const Desktop = () => {
   };
 
   const minimizeWindow = (windowId) => {
-    setOpenWindows(openWindows.map(w => 
-      w.id === windowId ? { ...w, minimized: !w.minimized } : w
-    ));
+    setOpenWindows(prev =>
+      prev.map(w => 
+        w.id === windowId ? { ...w, minimized: !w.minimized } : w
+      )
+    );
   };
 
-  const bringToFront = (windowId) => {
-    setOpenWindows(openWindows.map(w => 
+  const bringToFront = useCallback((windowId) => {
+    setOpenWindows(prev => prev.map(w => 
       w.id === windowId ? { ...w, zIndex: zIndexCounter } : w
     ));
-    setZIndexCounter(zIndexCounter + 1);
-  };
+    setZIndexCounter(prev => prev + 1);
+  }, [zIndexCounter]);
 
 
   // Listen for custom event to open contact form
@@ -423,92 +864,96 @@ const Desktop = () => {
     return () => {
       window.removeEventListener('openContactForm', handleOpenContact, true);
     };
-  }, [services, openWindows]);
+  }, [services, openWindows, bringToFront, openWindow]);
 
   const updateWindowPosition = (windowId, x, y) => {
-    setOpenWindows(openWindows.map(w => {
-      if (w.id === windowId) {
-        // Get window dimensions
-        const windowWidth = w.width || 500;
-        const windowHeight = w.height || 400;
-        
-        // Calculate viewport boundaries (accounting for taskbar at bottom)
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight - 40; // 40px for taskbar
-        
-        // On mobile, keep windows at top-left and prevent dragging
-        const isMobile = viewportWidth <= 768;
-        const constrainedX = isMobile ? 0 : Math.max(0, Math.min(x, viewportWidth - windowWidth));
-        const constrainedY = isMobile ? 0 : Math.max(0, Math.min(y, viewportHeight - windowHeight));
-        
-        return { ...w, x: constrainedX, y: constrainedY };
-      }
-      return w;
-    }));
+    setOpenWindows(prev =>
+      prev.map(w => {
+        if (w.id === windowId) {
+          // Get window dimensions
+          const windowWidth = w.width || 500;
+          const windowHeight = w.height || 400;
+          
+          // Calculate viewport boundaries (accounting for taskbar at bottom)
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight - 40; // 40px for taskbar
+          
+          // On mobile, keep windows at top-left and prevent dragging
+          const isMobile = viewportWidth <= 768;
+          const constrainedX = isMobile ? 0 : Math.max(0, Math.min(x, viewportWidth - windowWidth));
+          const constrainedY = isMobile ? 0 : Math.max(0, Math.min(y, viewportHeight - windowHeight));
+          
+          return { ...w, x: constrainedX, y: constrainedY };
+        }
+        return w;
+      })
+    );
   };
 
   const updateWindowSize = (windowId, width, height, x, y) => {
-    setOpenWindows(openWindows.map(w => {
-      if (w.id === windowId) {
-        // Get minimum dimensions based on window type
-        const minWidth = w.content.isPDF ? 600 : w.content.isBrowser ? 600 : w.content.isFolder ? 400 : w.content.isMusicMaker ? 600 : w.content.isContactForm ? 500 : w.content.isSEOChecker ? 900 : 400;
-        const minHeight = w.content.isPDF ? 400 : w.content.isBrowser ? 400 : w.content.isFolder ? 300 : w.content.isMusicMaker ? 400 : w.content.isContactForm ? 400 : w.content.isSEOChecker ? 700 : 300;
-        
-        // Calculate viewport boundaries
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight - 40; // 40px for taskbar
-        
-        // Constrain to minimum dimensions
-        let constrainedWidth = Math.max(minWidth, width);
-        let constrainedHeight = Math.max(minHeight, height);
-        
-        // Constrain to viewport
-        const finalWidth = Math.min(constrainedWidth, viewportWidth);
-        const finalHeight = Math.min(constrainedHeight, viewportHeight);
-        
-        // Adjust position if window would go out of bounds
-        let finalX = x !== undefined ? x : w.x;
-        let finalY = y !== undefined ? y : w.y;
-        
-        // Ensure window doesn't go off-screen on the left
-        if (finalX < 0) {
-          finalX = 0;
+    setOpenWindows(prev =>
+      prev.map(w => {
+        if (w.id === windowId) {
+          // Get minimum dimensions based on window type
+          const minWidth = w.content.isPDF ? 600 : w.content.isBrowser ? 600 : w.content.isFolder ? 400 : w.content.isMusicMaker ? 600 : w.content.isContactForm ? 500 : w.content.isSEOChecker ? 900 : 400;
+          const minHeight = w.content.isPDF ? 400 : w.content.isBrowser ? 400 : w.content.isFolder ? 300 : w.content.isMusicMaker ? 400 : w.content.isContactForm ? 400 : w.content.isSEOChecker ? 700 : 300;
+          
+          // Calculate viewport boundaries
+          const viewportWidth = window.innerWidth;
+          const viewportHeight = window.innerHeight - 40; // 40px for taskbar
+          
+          // Constrain to minimum dimensions
+          let constrainedWidth = Math.max(minWidth, width);
+          let constrainedHeight = Math.max(minHeight, height);
+          
+          // Constrain to viewport
+          const finalWidth = Math.min(constrainedWidth, viewportWidth);
+          const finalHeight = Math.min(constrainedHeight, viewportHeight);
+          
+          // Adjust position if window would go out of bounds
+          let finalX = x !== undefined ? x : w.x;
+          let finalY = y !== undefined ? y : w.y;
+          
+          // Ensure window doesn't go off-screen on the left
+          if (finalX < 0) {
+            finalX = 0;
+          }
+          // Ensure window doesn't go off-screen on the top
+          if (finalY < 0) {
+            finalY = 0;
+          }
+          // Ensure window doesn't go off-screen on the right
+          if (finalX + finalWidth > viewportWidth) {
+            finalX = Math.max(0, viewportWidth - finalWidth);
+          }
+          // Ensure window doesn't go off-screen on the bottom
+          if (finalY + finalHeight > viewportHeight) {
+            finalY = Math.max(0, viewportHeight - finalHeight);
+          }
+          
+          // If width/height were constrained, adjust position for left/top resizing
+          if (width < minWidth && x !== undefined) {
+            // Window was resized from left but hit minimum - keep right edge fixed
+            finalX = w.x + w.width - finalWidth;
+          }
+          if (height < minHeight && y !== undefined) {
+            // Window was resized from top but hit minimum - keep bottom edge fixed
+            finalY = w.y + w.height - finalHeight;
+          }
+          
+          return { 
+            ...w, 
+            width: finalWidth, 
+            height: finalHeight,
+            x: finalX,
+            y: finalY,
+            originalWidth: w.originalWidth || finalWidth,
+            originalHeight: w.originalHeight || finalHeight
+          };
         }
-        // Ensure window doesn't go off-screen on the top
-        if (finalY < 0) {
-          finalY = 0;
-        }
-        // Ensure window doesn't go off-screen on the right
-        if (finalX + finalWidth > viewportWidth) {
-          finalX = Math.max(0, viewportWidth - finalWidth);
-        }
-        // Ensure window doesn't go off-screen on the bottom
-        if (finalY + finalHeight > viewportHeight) {
-          finalY = Math.max(0, viewportHeight - finalHeight);
-        }
-        
-        // If width/height were constrained, adjust position for left/top resizing
-        if (width < minWidth && x !== undefined) {
-          // Window was resized from left but hit minimum - keep right edge fixed
-          finalX = w.x + w.width - finalWidth;
-        }
-        if (height < minHeight && y !== undefined) {
-          // Window was resized from top but hit minimum - keep bottom edge fixed
-          finalY = w.y + w.height - finalHeight;
-        }
-        
-        return { 
-          ...w, 
-          width: finalWidth, 
-          height: finalHeight,
-          x: finalX,
-          y: finalY,
-          originalWidth: w.originalWidth || finalWidth,
-          originalHeight: w.originalHeight || finalHeight
-        };
-      }
-      return w;
-    }));
+        return w;
+      })
+    );
   };
 
   const updateIconPosition = (iconId, x, y) => {

@@ -4,6 +4,20 @@
   box-sizing: border-box;
 }
 
+/* Ensure React95 Select dropdown menus overlap windows */
+div[class*="Select"] > div[class*="menu"],
+div[class*="Select"] > ul[class*="menu"],
+div[role="listbox"],
+div[role="option"] {
+  z-index: 10001 !important;
+}
+
+/* Ensure Select dropdown container allows overflow */
+div[class*="Select"] {
+  position: relative;
+  z-index: 10001;
+}
+
 :root {
   --custom-focus-color: #008080; /* Default teal color */
 }
