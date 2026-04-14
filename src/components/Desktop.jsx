@@ -1148,6 +1148,16 @@ const Desktop = () => {
     ? { backgroundColor: desktopColor }
     : {};
 
+  // "Active" window = the frontmost non-minimized one (Windows-like focus).
+  const activeWindowId = useMemo(() => {
+    let active = null;
+    for (const w of openWindows) {
+      if (w.minimized) continue;
+      if (!active || w.zIndex > active.zIndex) active = w;
+    }
+    return active?.id ?? null;
+  }, [openWindows]);
+
   return (
     <div 
       className={desktopClasses}
@@ -1193,6 +1203,7 @@ const Desktop = () => {
           onMove={(x, y) => updateWindowPosition(window.id, x, y)}
           onResize={(width, height, x, y) => updateWindowSize(window.id, width, height, x, y)}
           isSelected={selectedWindowIds.has(window.id)}
+          isActive={activeWindowId === window.id}
         />
       ))}
 
