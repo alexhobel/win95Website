@@ -348,17 +348,21 @@ const Desktop = () => {
             setZIndexCounter(newZIndex);
             
             // Get reverb state from music maker window
-            const enabledKey = `${channelName}ReverbEnabled`;
-            const roomSizeKey = `${channelName}ReverbRoomSize`;
-            const dampingKey = `${channelName}ReverbDamping`;
-            const wetLevelKey = `${channelName}ReverbWetLevel`;
-            const dryLevelKey = `${channelName}ReverbDryLevel`;
+            // MusicMaker uses `drumReverb*` (singular), but our channel name is `drums`.
+            // Map it so drum reverb windows actually control the drum chain.
+            const channelKeyPrefix = channelName === 'drums' ? 'drum' : channelName;
+
+            const enabledKey = `${channelKeyPrefix}ReverbEnabled`;
+            const roomSizeKey = `${channelKeyPrefix}ReverbRoomSize`;
+            const dampingKey = `${channelKeyPrefix}ReverbDamping`;
+            const wetLevelKey = `${channelKeyPrefix}ReverbWetLevel`;
+            const dryLevelKey = `${channelKeyPrefix}ReverbDryLevel`;
             
-            const enabled = musicMakerWindow.content[enabledKey] ?? false;
-            const roomSize = musicMakerWindow.content[roomSizeKey] ?? 0.5;
-            const damping = musicMakerWindow.content[dampingKey] ?? 0.5;
-            const wetLevel = musicMakerWindow.content[wetLevelKey] ?? 0.3;
-            const dryLevel = musicMakerWindow.content[dryLevelKey] ?? 0.7;
+            const enabled = musicMakerWindow.content[enabledKey] ?? musicMakerWindow.content.drumsReverbEnabled ?? false;
+            const roomSize = musicMakerWindow.content[roomSizeKey] ?? musicMakerWindow.content.drumsReverbRoomSize ?? 0.5;
+            const damping = musicMakerWindow.content[dampingKey] ?? musicMakerWindow.content.drumsReverbDamping ?? 0.5;
+            const wetLevel = musicMakerWindow.content[wetLevelKey] ?? musicMakerWindow.content.drumsReverbWetLevel ?? 0.3;
+            const dryLevel = musicMakerWindow.content[dryLevelKey] ?? musicMakerWindow.content.drumsReverbDryLevel ?? 0.7;
             
             // Create handlers for this channel - these will be created fresh each time
             // They need to capture currentWindowId from the closure

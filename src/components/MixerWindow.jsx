@@ -1,4 +1,4 @@
-import { Button } from 'react95';
+import { Button, ScrollView } from 'react95';
 import mixerIcon from '../assets/windows98-icons/ico/mixer_sound.ico';
 import './MixerWindow.css';
 
@@ -18,61 +18,65 @@ const MixerWindow = ({
         <img src={mixerIcon} alt="Mixer" style={{ width: '24px', height: '24px', imageRendering: 'pixelated' }} />
         Mixer
       </h3>
-      <div className="mixer-controls">
-        <div className="mixer-channel">
-          <div className="mixer-channel-label">Drums</div>
-          <div className="mixer-slider-container">
-            <input 
-              type="range" 
-              min="0" 
-              max="1" 
-              step="0.01" 
-              value={drumVolume}
-              onChange={(e) => onDrumVolumeChange(parseFloat(e.target.value))}
-              className="mixer-slider"
-              orient="vertical"
-            />
-            <div className="mixer-value">{Math.round(drumVolume * 100)}%</div>
+      <div className="mixer-controls-wrapper">
+        <ScrollView style={{ width: '100%', flex: 1, minHeight: 0 }}>
+          <div className="mixer-controls">
+            <div className="mixer-channel">
+              <div className="mixer-channel-label">Drums</div>
+              <div className="mixer-slider-container">
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={drumVolume}
+                  onChange={(e) => onDrumVolumeChange(parseFloat(e.target.value))}
+                  className="mixer-slider"
+                  orient="vertical"
+                />
+                <div className="mixer-value">{Math.round(drumVolume * 100)}%</div>
+              </div>
+              <Button 
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onOpenDrumReverb) {
+                    onOpenDrumReverb();
+                  }
+                }}
+              >
+                + REVERB
+              </Button>
+            </div>
+            <div className="mixer-channel">
+              <div className="mixer-channel-label">Synth</div>
+              <div className="mixer-slider-container">
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value={synthVolume}
+                  onChange={(e) => onSynthVolumeChange(parseFloat(e.target.value))}
+                  className="mixer-slider"
+                  orient="vertical"
+                />
+                <div className="mixer-value">{Math.round(synthVolume * 100)}%</div>
+              </div>
+              <Button 
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onOpenSynthReverb) {
+                    onOpenSynthReverb();
+                  }
+                }}
+              >
+                + REVERB
+              </Button>
+            </div>
           </div>
-          <Button 
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onOpenDrumReverb) {
-                onOpenDrumReverb();
-              }
-            }}
-          >
-            + REVERB
-          </Button>
-        </div>
-        <div className="mixer-channel">
-          <div className="mixer-channel-label">Synth</div>
-          <div className="mixer-slider-container">
-            <input 
-              type="range" 
-              min="0" 
-              max="1" 
-              step="0.01" 
-              value={synthVolume}
-              onChange={(e) => onSynthVolumeChange(parseFloat(e.target.value))}
-              className="mixer-slider"
-              orient="vertical"
-            />
-            <div className="mixer-value">{Math.round(synthVolume * 100)}%</div>
-          </div>
-          <Button 
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (onOpenSynthReverb) {
-                onOpenSynthReverb();
-              }
-            }}
-          >
-            + REVERB
-          </Button>
-        </div>
+        </ScrollView>
       </div>
     </div>
   );

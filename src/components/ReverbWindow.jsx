@@ -1,4 +1,5 @@
 import ReverbPlugin from './ReverbPlugin';
+import { ScrollView } from 'react95';
 import './ReverbWindow.css';
 
 const ReverbWindow = ({
@@ -16,18 +17,20 @@ const ReverbWindow = ({
   return (
     <div className="reverb-window-container">
       <div className="reverb-window-content">
-        <ReverbPlugin
-          enabled={enabled}
-          onEnabledChange={onEnabledChange}
-          roomSize={roomSize}
-          onRoomSizeChange={onRoomSizeChange}
-          damping={damping}
-          onDampingChange={onDampingChange}
-          wetLevel={wetLevel}
-          onWetLevelChange={onWetLevelChange}
-          dryLevel={dryLevel}
-          onDryLevelChange={onDryLevelChange}
-        />
+        <ScrollView style={{ width: '100%', flex: 1, minHeight: 0 }}>
+          <ReverbPlugin
+            enabled={enabled}
+            onEnabledChange={onEnabledChange}
+            roomSize={roomSize}
+            onRoomSizeChange={onRoomSizeChange}
+            damping={damping}
+            onDampingChange={onDampingChange}
+            wetLevel={wetLevel}
+            onWetLevelChange={onWetLevelChange}
+            dryLevel={dryLevel}
+            onDryLevelChange={onDryLevelChange}
+          />
+        </ScrollView>
       </div>
     </div>
   );
