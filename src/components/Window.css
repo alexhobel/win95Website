@@ -246,10 +246,9 @@
 }
 
 .window.mixer-window {
-  max-width: 300px;
-  min-width: 300px;
+  max-width: none;
+  min-width: 420px;
   min-height: 350px;
-  max-height: 350px;
 }
 
 @media (max-width: 768px) {
