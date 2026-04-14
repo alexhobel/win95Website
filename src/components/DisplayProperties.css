@@ -86,6 +86,7 @@
 
 .setting-control {
   flex: 1;
+  position: relative;
 }
 
 .wallpaper-select {

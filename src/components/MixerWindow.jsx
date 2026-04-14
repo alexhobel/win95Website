@@ -1,8 +1,17 @@
-import { useState } from 'react';
+import { Button } from 'react95';
 import mixerIcon from '../assets/windows98-icons/ico/mixer_sound.ico';
 import './MixerWindow.css';
 
-const MixerWindow = ({ drumVolume, synthVolume, onDrumVolumeChange, onSynthVolumeChange }) => {
+const MixerWindow = ({ 
+  drumVolume, 
+  synthVolume, 
+  onDrumVolumeChange, 
+  onSynthVolumeChange,
+  // Reverb callbacks for opening windows
+  onOpenDrumReverb,
+  onOpenSynthReverb,
+}) => {
+
   return (
     <div className="mixer-window-container">
       <h3 className="mixer-window-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
@@ -25,6 +34,17 @@ const MixerWindow = ({ drumVolume, synthVolume, onDrumVolumeChange, onSynthVolum
             />
             <div className="mixer-value">{Math.round(drumVolume * 100)}%</div>
           </div>
+          <Button 
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onOpenDrumReverb) {
+                onOpenDrumReverb();
+              }
+            }}
+          >
+            + REVERB
+          </Button>
         </div>
         <div className="mixer-channel">
           <div className="mixer-channel-label">Synth</div>
@@ -41,6 +61,17 @@ const MixerWindow = ({ drumVolume, synthVolume, onDrumVolumeChange, onSynthVolum
             />
             <div className="mixer-value">{Math.round(synthVolume * 100)}%</div>
           </div>
+          <Button 
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onOpenSynthReverb) {
+                onOpenSynthReverb();
+              }
+            }}
+          >
+            + REVERB
+          </Button>
         </div>
       </div>
     </div>

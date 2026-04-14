@@ -6,6 +6,11 @@
   overflow: hidden;
 }
 
+/* Window button base styles */
+.appbar-window-button {
+  font-family: inherit !important;
+}
+
 /* Focused/active window tab - pressed/inset appearance (Windows 95 typical) */
 .appbar-window-button.focused {
   background: #c0c0c0 !important;
@@ -54,6 +59,7 @@
 .appbar-time {
   background: #c0c0c0 !important;
   border: 2px inset #c0c0c0 !important;
+  font-family: inherit !important;
 }
 
 /* Start Menu - grey background matching AppBar */
@@ -76,6 +82,7 @@
 .custom-tooltip {
   position: fixed;
   z-index: 10003;
+  font-family: inherit;
 }
 
 

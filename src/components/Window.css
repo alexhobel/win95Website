@@ -6,8 +6,9 @@
   display: flex;
   flex-direction: column;
   resize: none;
-  border: 2px outset #c0c0c0;
-  background: #c0c0c0;
+  border: none;
+  background: transparent;
+  padding: 0;
 }
 
 /* Mobile responsive styles */

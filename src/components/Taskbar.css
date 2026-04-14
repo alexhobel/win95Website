@@ -57,6 +57,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 200px;
+  font-family: inherit;
 }
 
 .taskbar-window-button:hover {
@@ -97,5 +98,6 @@
   color: #000;
   font-weight: normal;
   white-space: nowrap;
+  font-family: inherit;
 }
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TextInput, Button, ProgressBar } from 'react95';
+import { TextInput, Button, ProgressBar, ScrollView, Frame } from 'react95';
 import './SEOGeoChecker.css';
 
 const SEOGeoChecker = () => {
@@ -39,7 +39,7 @@ const SEOGeoChecker = () => {
         try {
           const errorData = await response.json();
           errorMessage = errorData.error || errorMessage;
-        } catch (parseError) {
+        } catch {
           // If JSON parsing fails, use status text
           errorMessage = `Server error: ${response.status} ${response.statusText}`;
         }
@@ -106,89 +106,80 @@ const SEOGeoChecker = () => {
 
   return (
     <div className="seo-checker-container">
-      {/* Menu Bar */}
-      <div className="seo-menu-bar">
-        <button className="menu-item">File</button>
-        <button className="menu-item">Edit</button>
-        <button className="menu-item">View</button>
-        <button className="menu-item">Tools</button>
-        <button className="menu-item">Help</button>
-      </div>
+     
 
       {/* Toolbar */}
       <div className="seo-toolbar">
-        <button className="toolbar-button" title="New Check">
-          <span className="toolbar-icon">📄</span>
-        </button>
-        <button className="toolbar-button" title="Save Report">
-          <span className="toolbar-icon">💾</span>
-        </button>
-        <button className="toolbar-button" title="Print">
-          <span className="toolbar-icon">🖨</span>
-        </button>
+        <Button className="toolbar-button" title="Save Report" disabled>
+          <span className="toolbar-icon">Safe</span>
+        </Button>
+        <Button className="toolbar-button" title="Print" disabled>
+          <span className="toolbar-icon">Print</span>
+        </Button>
         <div className="toolbar-separator"></div>
-        <button className="toolbar-button" title="Refresh">
-          <span className="toolbar-icon">↻</span>
-        </button>
+        <Button className="toolbar-button" title="Refresh" disabled>
+          <span className="toolbar-icon" >↻</span>
+        </Button>
       </div>
 
       {/* Main Content */}
-      <div className="seo-content">
-        {/* Input Section */}
-        <div className="input-section">
-          <div className="section-header">
-            <h2 className="section-title">🔍 SEO/GEO Website Analyzer</h2>
-          </div>
-          <div className="input-group">
-            <label className="input-label">Website URL:</label>
-            <div className="url-input-container">
-              <TextInput
-                variant="flat"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="https://example.com"
-                className="url-input"
-                fullWidth
-                disabled={loading}
-              />
-              <Button 
-                onClick={handleCheck}
-                disabled={loading || !url.trim()}
-                className="check-button"
-              >
-                {loading ? 'Analyzing...' : '🔍 Analyze'}
-              </Button>
+      <div className="seo-content" style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        <ScrollView style={{ width: '100%', flex: 1, minHeight: 0 }}>
+          {/* Input Section */}
+          <div className="input-section">
+            <div className="section-header">
+              <h2 className="section-title">🔍 SEO/GEO Website Analyzer</h2>
             </div>
-            <div className="input-hint">
-              Enter a website URL to analyze SEO and GEO metrics
+            <div className="input-group">
+              <label className="input-label">Website URL:</label>
+              <div className="url-input-container">
+                <TextInput
+                  variant="flat"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="https://example.com"
+                  className="url-input"
+                  fullWidth
+                  disabled={loading}
+                />
+                <Button 
+                  onClick={handleCheck}
+                  disabled={loading || !url.trim()}
+                  className="check-button"
+                >
+                  {loading ? 'Analyzing...' : '🔍 Analyze'}
+                </Button>
+              </div>
+              <div className="input-hint">
+                Enter a website URL to analyze SEO and GEO metrics
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Loading Progress Bar */}
-        {loading && (
-          <div className="loading-section" style={{ margin: '20px 0', padding: '20px', background: '#ffffff', border: '2px inset #c0c0c0' }}>
-            <div style={{ marginBottom: '10px', fontSize: '11px', color: '#000', fontFamily: 'MS Sans Serif, sans-serif' }}>
-              Analyzing website...
+          {/* Loading Progress Bar */}
+          {loading && (
+            <div className="loading-section" style={{ margin: '20px 0', padding: '20px', background: '#ffffff', border: '2px inset #c0c0c0' }}>
+              <div style={{ marginBottom: '10px', fontSize: '11px', color: '#000', fontFamily: 'MS Sans Serif, sans-serif' }}>
+                Analyzing website...
+              </div>
+              <div style={{ width: '100%', maxWidth: '500px' }}>
+                <ProgressBar value={Math.floor(loadingProgress)} style={{ width: '100%' }} />
+              </div>
             </div>
-            <div style={{ width: '100%', maxWidth: '500px' }}>
-              <ProgressBar value={Math.floor(loadingProgress)} style={{ width: '100%' }} />
+          )}
+
+          {/* Error Message */}
+          {error && (
+            <div className="error-message">
+              <span className="error-icon">⚠️</span>
+              <span className="error-text">{error}</span>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Error Message */}
-        {error && (
-          <div className="error-message">
-            <span className="error-icon">⚠️</span>
-            <span className="error-text">{error}</span>
-          </div>
-        )}
-
-        {/* Analysis Results */}
-        {analysis && (
-          <div className="analysis-section">
+          {/* Analysis Results */}
+          {analysis && (
+            <div className="analysis-section" style={{ marginTop: '1rem' }}>
             <div className="section-header">
               <h2 className="section-title">📊 Analysis Results</h2>
             </div>
@@ -330,12 +321,13 @@ const SEOGeoChecker = () => {
             )}
           </div>
         )}
+        </ScrollView>
       </div>
 
       {/* Status Bar */}
-      <div className="seo-status-bar">
+      <Frame variant="well" style={{ padding: '0.1rem 0.25rem', marginTop: '0.5rem' }}>
         <span>{loading ? 'Analyzing website...' : analysis ? 'Analysis complete' : 'Ready'}</span>
-      </div>
+      </Frame>
     </div>
   );
 };

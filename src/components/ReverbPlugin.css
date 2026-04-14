@@ -1,0 +1,353 @@
+/* Reverb Plugin - Spacey 2000s Futuristic Style */
+.reverb-plugin {
+  background: linear-gradient(135deg, #0a0a2e 0%, #16213e 50%, #0f3460 100%);
+  border: 3px solid #00ffff;
+  border-radius: 8px;
+  box-shadow: 
+    0 0 20px rgba(0, 255, 255, 0.5),
+    inset 0 0 30px rgba(0, 255, 255, 0.1);
+  padding: 15px;
+  min-width: 280px;
+  font-family: 'Courier New', monospace;
+  position: relative;
+  overflow: hidden;
+}
+
+.reverb-plugin::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 255, 0.03) 2px,
+      rgba(0, 255, 255, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 255, 255, 0.03) 2px,
+      rgba(0, 255, 255, 0.03) 4px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.reverb-plugin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.reverb-plugin-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reverb-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 0 5px #00ffff);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+.reverb-title-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: #00ffff;
+  text-shadow: 
+    0 0 10px #00ffff,
+    0 0 20px #00ffff,
+    0 0 30px #00ffff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.reverb-version {
+  font-size: 9px;
+  color: #00ffff;
+  opacity: 0.7;
+  margin-left: 5px;
+}
+
+.reverb-toggle {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.reverb-toggle-input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.reverb-toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1a1a3e;
+  border: 2px solid #00ffff;
+  border-radius: 24px;
+  transition: 0.3s;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.reverb-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #00ffff;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 0 10px #00ffff;
+}
+
+.reverb-toggle-input:checked + .reverb-toggle-slider {
+  background-color: #00ffff;
+  box-shadow: 
+    0 0 20px #00ffff,
+    inset 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.reverb-toggle-input:checked + .reverb-toggle-slider:before {
+  transform: translateX(26px);
+  background-color: #0a0a2e;
+  box-shadow: 0 0 15px #00ffff;
+}
+
+.reverb-plugin-body {
+  position: relative;
+  z-index: 1;
+}
+
+.reverb-visualizer {
+  position: relative;
+  height: 120px;
+  background: radial-gradient(ellipse at center, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+  border: 2px solid #00ffff;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0, 255, 255, 0.2);
+}
+
+.reverb-space-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(20px, 20px); }
+}
+
+.reverb-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.reverb-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #00ffff;
+  border-radius: 50%;
+  box-shadow: 0 0 6px #00ffff;
+  opacity: 0;
+}
+
+.reverb-particle.active {
+  animation: particleFloat 4s infinite;
+}
+
+@keyframes particleFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) scale(1.5);
+  }
+}
+
+.reverb-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.reverb-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reverb-control-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reverb-label-text {
+  font-size: 11px;
+  font-weight: bold;
+  color: #00ffff;
+  text-shadow: 0 0 5px #00ffff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.reverb-label-value {
+  font-size: 11px;
+  font-weight: bold;
+  color: #00ffff;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid #00ffff;
+  padding: 2px 8px;
+  border-radius: 3px;
+  min-width: 40px;
+  text-align: center;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.reverb-slider-container {
+  position: relative;
+  height: 30px;
+}
+
+.reverb-slider {
+  position: absolute;
+  width: 100%;
+  height: 30px;
+  opacity: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.reverb-slider:disabled {
+  cursor: not-allowed;
+}
+
+.reverb-slider-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: rgba(0, 255, 255, 0.2);
+  border: 1px solid #00ffff;
+  border-radius: 3px;
+  transform: translateY(-50%);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.reverb-slider-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #00ffff 0%, #00aaff 100%);
+  border-radius: 3px;
+  box-shadow: 
+    0 0 10px #00ffff,
+    inset 0 0 5px rgba(255, 255, 255, 0.3);
+  transition: width 0.1s ease;
+}
+
+.reverb-slider:disabled + .reverb-slider-track .reverb-slider-fill {
+  background: rgba(0, 255, 255, 0.3);
+  box-shadow: none;
+}
+
+.reverb-plugin-footer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 255, 255, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.reverb-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.reverb-status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1a1a3e;
+  border: 2px solid #00ffff;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.reverb-status-indicator.active {
+  background: #00ffff;
+  box-shadow: 
+    0 0 10px #00ffff,
+    0 0 20px #00ffff;
+  animation: statusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
+}
+
+.reverb-status-text {
+  font-size: 10px;
+  font-weight: bold;
+  color: #00ffff;
+  text-shadow: 0 0 5px #00ffff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+

@@ -309,8 +309,7 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
                     flexShrink: 0,
                     background: '#c0c0c0',
                     color: '#000',
-                    cursor: 'pointer',
-                    fontFamily: 'MS Sans Serif, sans-serif'
+                    cursor: 'pointer'
                   }}
                 >
                   {window.title}
@@ -377,7 +376,6 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
                     border: '1px solid #000',
                     padding: '4px 8px',
                     fontSize: '11px',
-                    fontFamily: 'MS Sans Serif, sans-serif',
                     color: '#000',
                     whiteSpace: 'nowrap',
                     zIndex: 10003,
@@ -403,8 +401,7 @@ export default function AppBarComponent({ windows = [], onWindowClick, onOpenWin
             color: '#000',
             fontWeight: 'normal',
             whiteSpace: 'nowrap',
-            flexShrink: 0,
-            fontFamily: 'MS Sans Serif, sans-serif'
+            flexShrink: 0
           }}>
             {formattedTime}
           </div>
