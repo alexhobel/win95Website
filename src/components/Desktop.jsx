@@ -1600,28 +1600,42 @@ const Desktop = () => {
         windows={openWindows}
         onOpenWindow={(serviceId) => {
           const service = services.find((s) => s.id === serviceId);
-          if (service) {
-            openWindow(service);
-          }
+          if (service) openWindow(service);
         }}
         onWindowClick={(windowId) => {
-          const window = openWindows.find((w) => w.id === windowId);
-          if (window) {
-            if (window.minimized) {
-              // Restore minimized window and bring to front in a single update
-              setOpenWindows(
-                openWindows.map((w) =>
-                  w.id === windowId
-                    ? { ...w, minimized: false, zIndex: zIndexCounter }
-                    : w
-                )
-              );
-              setZIndexCounter(zIndexCounter + 1);
-            } else {
-              // Window is already visible - just bring to front
-              bringToFront(windowId);
-            }
+          const clickedWindow = openWindows.find((w) => w.id === windowId);
+          if (!clickedWindow) return;
+
+          const visibleWindows = openWindows.filter((w) => !w.minimized);
+          const topZIndex = Math.max(
+            ...visibleWindows.map((w) => w.zIndex || 0),
+            0
+          );
+          const isFocused =
+            !clickedWindow.minimized && clickedWindow.zIndex === topZIndex;
+
+          if (clickedWindow.minimized) {
+            setOpenWindows((prev) =>
+              prev.map((w) =>
+                w.id === windowId
+                  ? { ...w, minimized: false, zIndex: zIndexCounter }
+                  : w
+              )
+            );
+            setZIndexCounter((prev) => prev + 1);
+            return;
           }
+
+          if (isFocused) {
+            setOpenWindows((prev) =>
+              prev.map((w) =>
+                w.id === windowId ? { ...w, minimized: true } : w
+              )
+            );
+            return;
+          }
+
+          bringToFront(windowId);
         }}
       />
 
